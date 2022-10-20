@@ -61,9 +61,10 @@ use app\core\LoginHelper;
   </nav>
 
   <div class="container">
-    <?php if (Application::$app->session->getFlash('success')) : ?>
+    <?php
+      if (Application::$app->response->message) : ?>
       <div class="alert alert-success">
-        <?php echo Application::$app->session->getFlash('success'); ?>
+        <?php echo Application::$app->response->message; ?>
       </div>
     <?php endif; ?>
     {{content}}

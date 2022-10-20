@@ -5,6 +5,7 @@ namespace app\controllers\user;
 use app\core\Application;
 use app\core\Controller;
 use app\core\db\DBModel;
+use app\core\exception\ValidationException;
 use app\core\LoginHelper;
 use app\core\middlewares\UserAuthenticationMiddleware;
 use app\core\Request;
@@ -30,11 +31,12 @@ class UserLoginController extends Controller
             $this->model->loadData($request->getBody());
             if ($this->validate([
                 "email" => ["required", "email",],
-                "password" => ["required", "min" => 8],
+                "password" => ["required", ["min" => 8]],
             ]) && LoginHelper::login($this->model, "user")) {
                 var_dump($this->errors);
                 $response->redirect("/");
             }
+            throw new ValidationException($this->errors);
         }
         return $this->render("login", [
             "model" => $this->model,
@@ -56,7 +58,7 @@ class UserLoginController extends Controller
             ])) {
                 // $this->hashPassword();
                 if ($this->model->save($request->getBody())) {
-                    Application::$app->session->setFlash("success", "Thank you for registering");
+                    $response->message("Thank you for registering");
                     $response->redirect("/");
                 }
             }

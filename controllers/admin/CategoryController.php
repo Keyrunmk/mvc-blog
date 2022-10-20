@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use app\core\Application;
+use app\core\contracts\CategoryContract;
 use app\core\Controller;
 use app\core\db\DBModel;
 use app\core\repositories\CategoryRepository;
@@ -16,7 +17,7 @@ class CategoryController extends Controller
 
     protected Category $model;
 
-    public function __construct(protected CategoryRepository $categoryRepository)
+    public function __construct(protected CategoryContract $categoryRepository)
     {
         $this->layout = "admin/app";
         $this->model = new Category();
@@ -44,7 +45,7 @@ class CategoryController extends Controller
                     "description" => ["required"]
                 ]) && $this->categoryRepository->createCategory($request->getBody())
             ) {
-                Application::$app->session->setFlash("Success", "Category Added");
+                // Application::$app->session->setFlash("Success", "Category Added");
                 Application::$app->response->redirect("/admin/category");
             }
         }

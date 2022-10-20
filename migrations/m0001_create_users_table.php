@@ -1,7 +1,5 @@
 <?php
 
-namespace app\migrations;
-
 use app\core\Application;
 
 class m0001_create_users_table
