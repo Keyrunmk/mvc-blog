@@ -9,8 +9,6 @@ use app\controllers\user\UserLoginController;
  * ROUTES
  * @param array e.g ("/", [Controller::class, "home"]);
  */
-
-//contact routes
 $app->router->get("/", [SiteController::class, "home"]);
 
 //login routes

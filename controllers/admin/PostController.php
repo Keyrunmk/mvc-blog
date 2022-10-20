@@ -54,7 +54,7 @@ class PostController extends Controller
             }
         }
 
-        Application::$app->session->setFlash("Success", "Product Added");
+        // Application::$app->session->setFlash("Success", "Product Added");
         Application::$app->response->redirect("/admin/posts");
     }
 

@@ -3,7 +3,6 @@
 namespace app\controllers\admin;
 
 use app\core\Controller;
-use app\core\db\DBModel;
 use app\core\LoginHelper;
 use app\core\Request;
 use app\core\Response;
@@ -14,7 +13,7 @@ class LoginController extends Controller
 {
     use ValidationTrait;
 
-    protected DBModel $model;
+    protected Admin $model;
 
     public function __construct()
     {
