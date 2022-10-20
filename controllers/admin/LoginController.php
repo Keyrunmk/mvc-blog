@@ -31,8 +31,8 @@ class LoginController extends Controller
         $this->model->loadData($request->getBody());
 
         if ($this->validate([
-            "email" => ["required","email"],
-            "password" => ["required", ["min"=>8]],
+            "email" => ["required", "email"],
+            "password" => ["required", ["min" => 8]],
         ]) && LoginHelper::login($this->model, "admin")) {
             $response->redirect("/admin");
         }
@@ -43,9 +43,9 @@ class LoginController extends Controller
         ]);
     }
 
-    public function logout(Request $request, Response $response)
+    public function logout(Request $request, Response $response): void
     {
-        LoginHelper::logout("admin"); 
+        LoginHelper::logout("admin");
         $response->redirect("/admin/login");
     }
 }

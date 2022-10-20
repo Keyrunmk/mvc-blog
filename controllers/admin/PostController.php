@@ -8,7 +8,6 @@ use app\core\repositories\CategoryPostRepository;
 use app\core\repositories\CategoryRepository;
 use app\core\repositories\PostRepository;
 use app\core\Request;
-use app\models\CategoryPost;
 use app\models\Post;
 
 class PostController extends Controller
@@ -16,18 +15,19 @@ class PostController extends Controller
     public function __construct(
         protected PostRepository $postRepository,
         protected CategoryRepository $categoryRepository,
-        protected CategoryPostRepository $categoryPostRepository
+        protected CategoryPostRepository $categoryPostRepository,
+        protected Post $model
     ) {
         $this->layout = "admin/app";
     }
 
-    public function index()
+    public function index(): string
     {
         $posts = $this->postRepository->listPosts();
         return $this->render("admin/post/index", ["posts" => $posts]);
     }
 
-    public function create()
+    public function create(): string
     {
         $categories = $this->categoryRepository->listCategories();
         return $this->render("admin/post/create", [
@@ -35,20 +35,17 @@ class PostController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         $data = $request->getBody();
         $ids["category_id"] = (int) array_shift($data);
-        $post = new Post();
-        $categoryPost = new CategoryPost();
 
         try {
             Application::$app->db->pdo->beginTransaction();
 
-            $post->loadData($data);
-            $ids["post_id"] = (int) $this->postRepository->createPost($post); 
-            $categoryPost->loadData($ids);
-            $this->categoryPostRepository->createCategoryPost($categoryPost);
+            $this->model->loadData($data);
+            $ids["post_id"] = (int) $this->postRepository->createPost($data);
+            $this->categoryPostRepository->createCategoryPost($ids);
 
             Application::$app->db->pdo->commit();
         } catch (\Throwable $e) {
@@ -61,11 +58,11 @@ class PostController extends Controller
         Application::$app->response->redirect("/admin/posts");
     }
 
-    public function update(Request $request)
+    public function update(Request $request): string
     {
         $data = $request->getBody();
         $id = (int) array_pop($data);
-        
+
         $this->postRepository->updatePost($data, $id);
         return $this->index();
 
@@ -73,7 +70,7 @@ class PostController extends Controller
         return $this->render("admin/post/update", ["post" => $post]);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request): string
     {
         $id = (int) $request->getBody()["id"];
         $this->postRepository->deletePost($id);

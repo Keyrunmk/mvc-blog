@@ -14,7 +14,7 @@ class CategoryController extends Controller
 {
     use ValidationTrait;
 
-    protected DBModel $model;
+    protected Category $model;
 
     public function __construct(protected CategoryRepository $categoryRepository)
     {
@@ -22,7 +22,7 @@ class CategoryController extends Controller
         $this->model = new Category();
     }
 
-    public function index()
+    public function index(): string
     {
         $categories = $this->categoryRepository->listCategories();
         return $this->render("admin/categories/index", [
@@ -30,28 +30,27 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): string
     {
         return $this->render("admin/categories/create");
     }
 
-    public function store(Request $request)
+    public function store(Request $request): void
     {
-        if ($request->isPost()) {
-            $this->model->loadData($request->getBody());
-
-            if ($this->validate([
-                "name" => ["required"],
-                "description" => ["required"]
-            ]) && $this->categoryRepository->createCategory($this->model)) {
+        if ($this->model->loadData($request->getBody())) {
+            if (
+                $this->validate([
+                    "name" => ["required"],
+                    "description" => ["required"]
+                ]) && $this->categoryRepository->createCategory($request->getBody())
+            ) {
                 Application::$app->session->setFlash("Success", "Category Added");
                 Application::$app->response->redirect("/admin/category");
             }
-            var_dump($this->errors);
         }
     }
 
-    public function update(Request $request): mixed
+    public function update(Request $request): string
     {
         $data = $request->getBody();
         $id = (int) array_pop($data);
@@ -64,7 +63,7 @@ class CategoryController extends Controller
         return $this->render("admin/categories/update", ["category" => $category]);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request): string
     {
         $id = (int) $request->getBody()["id"];
         $this->categoryRepository->deleteCategory($id);
