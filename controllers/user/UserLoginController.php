@@ -24,7 +24,7 @@ class UserLoginController extends Controller
         $this->model = new User();
     }
 
-    public function login(Request $request, Response $response): mixed
+    public function login(Request $request, Response $response): string
     {
         if ($request->isPost()) {
             $this->model->loadData($request->getBody());
@@ -41,7 +41,7 @@ class UserLoginController extends Controller
         ]);
     }
 
-    public function register(Request $request): mixed
+    public function register(Request $request, Response $response): mixed
     {
         //check if the key of request matches the properties defined in the model class
         if ($request->method() === "post") {
@@ -49,14 +49,15 @@ class UserLoginController extends Controller
 
             //send the reqeusts for validation and if the the request is registered return success
             if ($this->validate([
-                "firstname" => "required",
-                "lastname" => "required",
-                ""
+                "firstname" => ["required"],
+                "lastname" => ["required"],
+                "email" => ["required", "email"],
+                "password" => ["required", ["min" => 8]],
             ])) {
                 // $this->hashPassword();
-                if ($this->model->save()) {
+                if ($this->model->save($request->getBody())) {
                     Application::$app->session->setFlash("success", "Thank you for registering");
-                    Application::$app->response->redirect("/");
+                    $response->redirect("/");
                 }
             }
             var_dump($this->errors);

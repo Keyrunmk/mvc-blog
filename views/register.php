@@ -24,6 +24,7 @@ $this->title = "Register";
         <input type="password" name="password" class="form-control"><br>
         <label for="confirmPassword">Confirm Password</label>
         <input type="password" name="confirmPassword" class="form-control"><br>
+        <input type="hidden" name="status" value="1">
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

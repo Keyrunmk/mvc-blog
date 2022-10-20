@@ -14,7 +14,7 @@ class AdminController extends Controller
         $this->registerMiddleware(new AdminAuthenticationMiddleware("admin", []));
     }
 
-    public function index()
+    public function index(): string
     {
         return $this->render("admin/dashboard/index");
     }
