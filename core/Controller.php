@@ -6,9 +6,12 @@ namespace app\core;
 
 use app\core\Application;
 use app\core\middlewares\BaseMiddleware;
+use app\core\traits\ValidationTrait;
 
 class Controller
 {
+    use ValidationTrait;
+
     public string $layout = "layouts/main";
     public string $action = '';
 
@@ -22,13 +25,13 @@ class Controller
         $this->layout = $layout;
     }
 
-    public function render(string $view, array|Object $params = []): String
+    public function render(string $view, array $params = []): String
     {
         return Application::$app->view->renderView($view, $params);
     }
 
-    public function renderView(string $view, Array $params = []): mixed
-    {
+    public function renderView(string $view, array $params = []): mixed
+    {   
         return Application::$app->view->renderSingleView($view, $params);
     }
 

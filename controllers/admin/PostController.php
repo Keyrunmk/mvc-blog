@@ -1,17 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\controllers\admin;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\exception\ValidationException;
 use app\core\repositories\CategoryPostRepository;
 use app\core\repositories\CategoryRepository;
 use app\core\repositories\PostRepository;
 use app\core\Request;
+use app\core\traits\ValidationTrait;
 use app\models\Post;
 
 class PostController extends Controller
 {
+    use ValidationTrait;
+
     public function __construct(
         protected PostRepository $postRepository,
         protected CategoryRepository $categoryRepository,
@@ -40,6 +46,15 @@ class PostController extends Controller
         $data = $request->getBody();
         $ids["category_id"] = (int) array_shift($data);
 
+        if ($this->model->loadData($data)) {
+            if (!$this->validate([
+                "name" => ["required", "string","unique"],
+                "status" => ["required"],
+            ])) {
+                throw new ValidationException($this->errors);
+            }
+        }
+
         try {
             Application::$app->db->pdo->beginTransaction();
 
@@ -52,8 +67,9 @@ class PostController extends Controller
             if (Application::$app->db->pdo->inTransaction()) {
                 Application::$app->db->pdo->rollBack();
             }
+            throw new ValidationException(["wrong data given, no records were persisted"]);
         }
-
+        
         // Application::$app->session->setFlash("Success", "Product Added");
         Application::$app->response->redirect("/admin/posts");
     }

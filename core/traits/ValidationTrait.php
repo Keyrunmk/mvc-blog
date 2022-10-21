@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\core\traits;
 
 use app\core\Application;
@@ -7,6 +9,8 @@ use app\core\Application;
 trait ValidationTrait
 {
     public static string $required = "required";
+    public static string $string = "string";
+    public static string $int = "int";
     public static string $email = "email";
     public static string $min = "min";
     public static string $max = "max";
@@ -29,9 +33,16 @@ trait ValidationTrait
                 if (is_array($ruleName)) {
                     $ruleName = array_key_first($rule);
                 }
-
                 if ($ruleName === self::$required && !$value) {
                     $this->addErrorForRule($attribute, self::$required);
+                }
+
+                if ($ruleName === self::$string && !preg_match("/^[a-zA-Z-' ]*$/", $value) ) {
+                    $this->addErrorForRule($attribute, self::$string);
+                }
+
+                if ($ruleName === self::$int && !preg_match("/^[0-9]*$/", $value)) {
+                    $this->addErrorForRule($attribute, self::$int);
                 }
 
                 if ($ruleName === self::$email && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
@@ -51,10 +62,8 @@ trait ValidationTrait
                 }
 
                 if ($ruleName === self::$unique) {
-                    $className = $rule['class'];
-                    $uniqueAttr = $rule['attribute'] ?? $attribute;
-                    $tableName = $className::tableName();
-                    $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttr = :attr");
+                    $tableName = $this->model->tableName();
+                    $statement = Application::$app->db->prepare("SELECT * FROM $tableName WHERE $attribute = :attr");
                     $statement->bindValue(":attr", $value);
                     $statement->execute();
                     $record = $statement->fetchObject();
@@ -82,6 +91,8 @@ trait ValidationTrait
     {
         return [
             self::$required => "This field is required",
+            self::$string => "This field should only contain letters",
+            self::$int => "This field must be integer",
             self::$email => "This field must be a valid email address",
             self::$min => "Min length of this field must be {min}",
             self::$max => "Max lenght of this field must be {max}",

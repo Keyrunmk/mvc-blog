@@ -10,6 +10,7 @@ use app\controllers\user\UserLoginController;
  * @param array e.g ("/", [Controller::class, "home"]);
  */
 $app->router->get("/", [SiteController::class, "home"]);
+$app->router->get("/posts", [SiteController::class, "showPosts"]);
 
 //login routes
 $app->router->get("/login", [UserLoginController::class, "login"]);
