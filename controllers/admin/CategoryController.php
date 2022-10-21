@@ -1,23 +1,25 @@
 <?php
 
+declare (strict_types=1);
+
 namespace app\controllers\admin;
 
 use app\core\Application;
 use app\core\contracts\CategoryContract;
 use app\core\Controller;
-use app\core\db\DBModel;
-use app\core\repositories\CategoryRepository;
+use app\core\exception\CommonException;
+use app\core\exception\ValidationException;
+use app\core\repositories\PostRepository;
 use app\core\Request;
+use app\core\Response;
 use app\core\traits\ValidationTrait;
 use app\models\Category;
 
 class CategoryController extends Controller
 {
-    use ValidationTrait;
-
     protected Category $model;
 
-    public function __construct(protected CategoryContract $categoryRepository)
+    public function __construct(protected CategoryContract $categoryRepository, protected PostRepository $postRepository)
     {
         $this->layout = "admin/app";
         $this->model = new Category();
@@ -36,19 +38,22 @@ class CategoryController extends Controller
         return $this->render("admin/categories/create");
     }
 
-    public function store(Request $request): void
+    public function store(Request $request, Response $response): void
     {
         if ($this->model->loadData($request->getBody())) {
             if (
                 $this->validate([
-                    "name" => ["required"],
+                    "name" => ["required","string","unique"],
                     "description" => ["required"]
                 ]) && $this->categoryRepository->createCategory($request->getBody())
             ) {
                 // Application::$app->session->setFlash("Success", "Category Added");
-                Application::$app->response->redirect("/admin/category");
+                $response->redirect("/admin/category");
+                exit;
             }
+            throw new ValidationException($this->errors);
         }
+        throw new ValidationException(["Failed to load data beacause of wrong data types"]);
     }
 
     public function update(Request $request): string
@@ -67,8 +72,23 @@ class CategoryController extends Controller
     public function delete(Request $request): string
     {
         $id = (int) $request->getBody()["id"];
-        $this->categoryRepository->deleteCategory($id);
+        $app = Application::$app->db->pdo;
+        try {
+            $app->beginTransaction();
+                $posts = $this->postRepository->findPostsByCategory($id);
+                foreach ($posts as $post) {
+                    $this->postRepository->deletePost($post["id"]);
+                }
 
+                $this->categoryRepository->deleteCategory($id);
+            $app->commit();
+        } catch (CommonException $e) {
+            if ($app->inTransaction()) {
+                $app->rollBack();
+            }
+            return $e->dump();
+        }
+        
         return $this->index();
     }
 }

@@ -6,7 +6,7 @@ namespace app\core\singletons;
 
 use app\core\exception\ContainerException;  
 
-class containerSingleton
+class ContainerSingleton
 {
     private static $instances = [];
 
