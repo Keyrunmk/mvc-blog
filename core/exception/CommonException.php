@@ -1,12 +1,12 @@
 <?php
 
-namespace app\core\exception;
+declare(strict_types=1);
 
-use Exception;
+namespace App\core\exception;
 
-class CommonException extends Exception
+class CommonException extends \Exception
 {
-    public function dump()
+    public function dump(): void
     {
         var_dump("<pre>");
         var_dump($this->code);

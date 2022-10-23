@@ -1,8 +1,10 @@
 <?php
 
-namespace app\core\db;
+declare(strict_types=1);
 
-use app\core\Application;
+namespace App\core\db;
+
+use App\core\Application;
 
 class DBMigrations extends Database
 {

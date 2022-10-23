@@ -1,9 +1,9 @@
 <?php
 
-namespace app\core\middlewares;
+namespace App\core\middlewares;
 
-use app\core\Application;
-use app\core\LoginHelper;
+use App\core\Application;
+use App\core\LoginHelper;
 
 class AdminAuthenticationMiddleware extends BaseMiddleware
 {

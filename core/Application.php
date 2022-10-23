@@ -2,22 +2,25 @@
 
 declare(strict_types=1);
 
-namespace app\core;
+namespace App\core;
 
-use app\core\db\Database;
-use app\core\db\DBMigrations;
-use app\core\Request;
-use app\core\singletons\Container;
+use App\core\db\Database;
+use App\core\db\DBMigrations;
+use App\core\Request;
+use App\core\singletons\Container;
 
 class Application
 {
+    //static props
     public static string $ROOT_DIR;
-
     public static Application $app;
+
+    //props
     public string $layout = "layouts/main";
     public string $userClass;
     public string $adminClass;
 
+    //class props
     public Router $router;
     public Request $request;
     public Response $response;
@@ -27,6 +30,7 @@ class Application
     public View $view;
     public Container $container;
 
+    //nullable props
     public ?Model $model;
     public ?Controller $controller = null;
 
@@ -70,7 +74,7 @@ class Application
     }
 
     /**
-     * @return \app\core\Controller $controller
+     * @return \App\core\Controller $controller
      */
     public function getController(Controller $controller): void
     {
@@ -78,7 +82,7 @@ class Application
     }
 
     /**
-     * @return \app\core\controller $controller
+     * @return \App\core\controller $controller
      */
     public function setController(Controller $controller): void
     {
@@ -86,7 +90,7 @@ class Application
     }
 
     //this runs after all requests are done
-    public function run()
+    public function run(): mixed
     {
         try {
             echo $this->router->resolve();

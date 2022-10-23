@@ -1,10 +1,11 @@
 <?php
 
-namespace app\controllers\admin;
+declare(strict_types=1);
 
-use app\core\Controller;
-use app\core\middlewares\AdminAuthenticationMiddleware;
-use app\core\Request;
+namespace App\controllers\admin;
+
+use App\core\Controller;
+use App\core\middlewares\AdminAuthenticationMiddleware;
 
 class AdminController extends Controller
 {

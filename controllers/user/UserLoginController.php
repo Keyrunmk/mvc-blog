@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\controllers\user;
 
-use app\core\Application;
 use app\core\Controller;
 use app\core\db\DBModel;
 use app\core\exception\ValidationException;
@@ -29,10 +30,11 @@ class UserLoginController extends Controller
     {
         if ($request->isPost()) {
             $this->model->loadData($request->getBody());
-            if ($this->validate([
+            $validate = $this->validate([
                 "email" => ["required", "email",],
                 "password" => ["required", ["min" => 8]],
-            ]) && LoginHelper::login($this->model, "user")) {
+            ]);
+            if ($validate && LoginHelper::login($this->model, "user")) {
                 var_dump($this->errors);
                 $response->redirect("/");
             }

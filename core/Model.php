@@ -1,6 +1,8 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
+
+namespace App\core;
 
 abstract class Model
 {
@@ -15,7 +17,7 @@ abstract class Model
             if (!property_exists($this, $key)) {
                 return false;
             }
-            if (! $this->$key = $value){
+            if (!$this->$key = $value) {
                 return false;
             };
         }

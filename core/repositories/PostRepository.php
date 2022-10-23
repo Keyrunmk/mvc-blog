@@ -1,10 +1,10 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\PostContract;
-use app\core\exception\CommonException;
-use app\models\Post;
+use App\core\contracts\PostContract;
+use App\core\exception\CommonException;
+use App\models\Post;
 use Exception;
 
 class PostRepository extends BaseRepository implements PostContract
@@ -79,4 +79,4 @@ class PostRepository extends BaseRepository implements PostContract
             throw $exception->dump();
         }
     }
-}   
+}

@@ -1,11 +1,12 @@
 <?php
 
-namespace app\core\db;
+declare(strict_types=1);
 
-use app\core\Application;
-use app\core\exception\CommonException;
-use app\core\Model;
-use Exception;
+namespace App\core\db;
+
+use App\core\Application;
+use App\core\exception\CommonException;
+use App\core\Model;
 use PDO;
 
 abstract class DBModel extends Model
@@ -25,7 +26,7 @@ abstract class DBModel extends Model
         $this->attributes = $this->attributes();
     }
 
-    public function save(array $data): int
+    public function save(array $data): int|CommonException
     {
         try {
             $params = array_map(fn ($attr) => ":$attr", $this->attributes);
@@ -34,14 +35,13 @@ abstract class DBModel extends Model
                 $statement->bindValue(":$attribute", $data[$attribute]);
             }
             $statement->execute();
-            return Application::$app->db->pdo->lastInsertId();
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw ($exception->dump());
+            return (int) Application::$app->db->pdo->lastInsertId();
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
-    public function update(array $data, int $id)
+    public function update(array $data, int $id): bool|CommonException
     {
         try {
             $attributes = array_keys($data);
@@ -49,25 +49,23 @@ abstract class DBModel extends Model
             $statement = self::prepare("UPDATE $this->tableName SET " . implode(', ', $sql) . " WHERE id = $id");
             $statement->execute();
             return true;
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
-    public function get(array $columns, string $orderBy, string $sortBy)
+    public function get(array $columns, string $orderBy, string $sortBy): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
             $statement->execute();
-            return $statement->fetchAll();
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
-    public function findPostsByCategoryId(int $id): object|array
+    public function findPostsByCategoryId(int $id): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT posts.* FROM posts
@@ -77,32 +75,30 @@ abstract class DBModel extends Model
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw ($exception->dump());
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
-    public function findOrFail(int $id): array
+    public function findOrFail(int $id): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT * FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool|CommonException
     {
         try {
             $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
             $statement->execute();
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+            return true;
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
     }
 
@@ -121,15 +117,14 @@ abstract class DBModel extends Model
 
             $statement->execute();
             return $statement->fetchObject(static::class);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (CommonException $e) {
+            throw ($e->dump());
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }
 
     public static function prepare(string $sql): mixed
     {
-        return Application::$app->db->pdo->prepare($sql);
+        return Application::$app->db->prepare($sql);
     }
 }

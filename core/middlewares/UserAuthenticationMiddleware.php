@@ -1,10 +1,10 @@
 <?php
 
-namespace app\core\middlewares;
+namespace App\core\middlewares;
 
-use app\core\Application;
-use app\core\exception\ForbiddenException;
-use app\core\LoginHelper;
+use App\core\Application;
+use App\core\exception\ForbiddenException;
+use App\core\LoginHelper;
 
 class UserAuthenticationMiddleware extends BaseMiddleware
 {
