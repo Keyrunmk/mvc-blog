@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\core\exception;
-
-use Exception;
+namespace App\core\exception;
 
 class CommonException extends \Exception
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\core\db;
+namespace App\core\db;
 
-use app\core\Application;
+use App\core\Application;
 
 class DBMigrations extends Database
 {

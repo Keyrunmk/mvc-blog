@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-    
-namespace app\models;
 
-use app\core\db\DBModel;
+namespace App\models;
+
+use App\core\db\DBModel;
 
 class User extends DBModel
 {

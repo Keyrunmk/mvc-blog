@@ -1,13 +1,13 @@
 <?php
 
-use app\core\Application;
+use App\core\Application;
 
 class m0004_create_tests_table
 {
     public function up()
     {
         $db = Application::$app->db;
-        
+
         $sql = "CREATE TABLE tests (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
@@ -20,7 +20,7 @@ class m0004_create_tests_table
     {
         $db = Application::$app->db;
 
-        $sql ="DROP TABLE tests";
+        $sql = "DROP TABLE tests";
         $db->pdo->exec($sql);
     }
 }

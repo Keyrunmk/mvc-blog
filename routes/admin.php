@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use app\controllers\admin\AdminController;
-use app\controllers\admin\CategoryController;
-use app\controllers\admin\LoginController;
-use app\controllers\admin\PostController;
+use App\controllers\admin\AdminController;
+use App\controllers\admin\CategoryController;
+use App\controllers\admin\LoginController;
+use App\controllers\admin\PostController;
 
 /**
  * ADMIN ROUTES
- * @param array e.g ("/", [Controller::class, "home"]);
+ * @param array e.g ("path", [Controller::class, "home"]);
  */
 $app->router->get("/admin", [AdminController::class, "index"]);
 

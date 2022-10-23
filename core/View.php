@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\core;
+namespace App\core;
 
 class View
 {
@@ -12,18 +12,16 @@ class View
     {
         $viewContent = $this->renderOnlyView($view, $params);
         $layoutContent = $this->layoutContent();
+
         return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
-    /**
-     * Returns the contents of mentioned view file with the parameters and set the key of parameter as the varibale holding value
-     * e.g. ['name' => 'kiran'] => $$key = $value => $(name) => 'kiran' => $name => 'kiran'
-     */
     public function renderOnlyView(string $view, array $params): string
     {
         foreach ($params as $key => $value) {
             $$key = $value;
         };
+
         ob_start();
         include_once Application::$ROOT_DIR . "/views/$view.php";
         return ob_get_clean();

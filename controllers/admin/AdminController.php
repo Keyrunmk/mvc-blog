@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\admin;
+namespace App\controllers\admin;
 
-use app\core\Controller;
-use app\core\middlewares\AdminAuthenticationMiddleware;
-use app\core\Request;
+use App\core\Controller;
+use App\core\middlewares\AdminAuthenticationMiddleware;
 
 class AdminController extends Controller
 {

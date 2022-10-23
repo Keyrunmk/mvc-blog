@@ -26,3 +26,33 @@ Features of this mvc framework are as follows;
 -> Define table name throught function tableName(){ return "tablename"; }
 -> You should also define properties on attributes(){ return ["attributename"]; }
 
+* Migrations
+
+* Processing of request data
+
+* Validations
+
+* Register/Login
+
+* TODO - Active Record Pattern
+
+* Session
+
+* Middlewares
+
+* Application Events
+
+* Framework reusable/installable core
+
+Features of the blog website done through the mvc:
+* Admin login/registration/authentication/authorizaiton
+    - admin has all the crud accessibility
+    - admin can create managers and remove them as well as assign them roles and permissions
+
+* Manager login/registration/authentication/authorization
+    - manager and create, read and update posts and categories
+
+* User login/registration/authentication/authorization
+    - user can view posts, filter category, comment
+
+* Guests accessibility - view posts, filter category

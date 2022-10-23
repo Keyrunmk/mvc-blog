@@ -1,19 +1,18 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 
-namespace app\controllers\admin;
+namespace App\controllers\admin;
 
-use app\core\Application;
-use app\core\contracts\CategoryContract;
-use app\core\Controller;
-use app\core\exception\CommonException;
-use app\core\exception\ValidationException;
-use app\core\repositories\PostRepository;
-use app\core\Request;
-use app\core\Response;
-use app\core\traits\ValidationTrait;
-use app\models\Category;
+use App\core\Application;
+use App\core\contracts\CategoryContract;
+use App\core\Controller;
+use App\core\exception\CommonException;
+use App\core\exception\ValidationException;
+use App\core\repositories\PostRepository;
+use App\core\Request;
+use App\core\Response;
+use App\models\Category;
 
 class CategoryController extends Controller
 {
@@ -43,7 +42,7 @@ class CategoryController extends Controller
         if ($this->model->loadData($request->getBody())) {
             if (
                 $this->validate([
-                    "name" => ["required","string","unique"],
+                    "name" => ["required", "string", "unique"],
                     "description" => ["required"]
                 ]) && $this->categoryRepository->createCategory($request->getBody())
             ) {
@@ -75,12 +74,12 @@ class CategoryController extends Controller
         $app = Application::$app->db->pdo;
         try {
             $app->beginTransaction();
-                $posts = $this->postRepository->findPostsByCategory($id);
-                foreach ($posts as $post) {
-                    $this->postRepository->deletePost($post["id"]);
-                }
+            $posts = $this->postRepository->findPostsByCategory($id);
+            foreach ($posts as $post) {
+                $this->postRepository->deletePost($post["id"]);
+            }
 
-                $this->categoryRepository->deleteCategory($id);
+            $this->categoryRepository->deleteCategory($id);
             $app->commit();
         } catch (CommonException $e) {
             if ($app->inTransaction()) {
@@ -88,7 +87,7 @@ class CategoryController extends Controller
             }
             return $e->dump();
         }
-        
+
         return $this->index();
     }
 }

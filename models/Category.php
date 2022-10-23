@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\models;
+namespace App\models;
 
-use app\core\db\DBModel;
+use App\core\db\DBModel;
 
 class Category extends DBModel
 {
@@ -25,4 +25,4 @@ class Category extends DBModel
     {
         return 'id';
     }
-}   
+}

@@ -2,23 +2,20 @@
 
 declare(strict_types=1);
 
-namespace app\core;
+namespace App\core;
 
 class Request
 {
-    /**
-     * Return the url without get request
-     */
     public function getPath(): string
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
-        $position = strpos($path,'?');
-        
-        if ($position === false){
-            return $path;
-        }   
+        $position = strpos($path, '?');
 
-        return substr($path, 0, $position);
+        if ($position === false) {
+            return $path;
+        }
+
+        return trim(substr($path, 0, $position));
     }
 
     public function method(): string
@@ -40,14 +37,14 @@ class Request
     {
         $body = [];
 
-        if ($this->method() === 'get'){
-            foreach ($_GET as $key => $value){
+        if ($this->method() === 'get') {
+            foreach ($_GET as $key => $value) {
                 $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }
 
-        if ($this->method() === 'post'){
-            foreach ($_POST as $key => $value){
+        if ($this->method() === 'post') {
+            foreach ($_POST as $key => $value) {
                 $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }

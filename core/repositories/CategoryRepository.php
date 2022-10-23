@@ -1,17 +1,16 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\CategoryContract;
-use app\core\db\DBModel;
-use app\core\exception\CommonException;
-use app\models\Category;
+use App\core\contracts\CategoryContract;
+use App\core\exception\CommonException;
+use App\models\Category;
 use Exception;
 
 class CategoryRepository extends BaseRepository implements CategoryContract
 {
     protected Category $model;
-    public function __construct(Category $model)
+    public function __construct()
     {
         $this->model = new Category();
     }

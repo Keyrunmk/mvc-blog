@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\core\traits;
+namespace App\core\traits;
 
-use app\core\Application;
+use App\core\Application;
 
 trait ValidationTrait
 {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use app\controllers\user\SiteController;
-use app\controllers\user\UserLoginController;
+use App\controllers\user\SiteController;
+use App\controllers\user\UserLoginController;
 
 /**
  * ROUTES
- * @param array e.g ("/", [Controller::class, "home"]);
+ * @param array e.g ("path", [Controller::class, "home"]);
  */
 $app->router->get("/", [SiteController::class, "home"]);
 $app->router->get("/posts", [SiteController::class, "showPosts"]);

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\core;
+namespace App\core;
 
-use app\core\Application;
-use app\core\middlewares\BaseMiddleware;
-use app\core\traits\ValidationTrait;
+use App\core\Application;
+use App\core\middlewares\BaseMiddleware;
+use App\core\traits\ValidationTrait;
 
 class Controller
 {
@@ -16,7 +16,7 @@ class Controller
     public string $action = '';
 
     /**
-     * @var \app\core\middlewares\BaseMiddleware[]
+     * @var \App\core\middlewares\BaseMiddleware[]
      */
     protected array $middlewares = [];
 
@@ -31,7 +31,7 @@ class Controller
     }
 
     public function renderView(string $view, array $params = []): mixed
-    {   
+    {
         return Application::$app->view->renderSingleView($view, $params);
     }
 
@@ -41,7 +41,7 @@ class Controller
     }
 
     /**
-     * @return \app\core\middlewares\BaseMiddleware[]
+     * @return \App\core\middlewares\BaseMiddleware[]
      */
     public function getMiddlewares(): array
     {

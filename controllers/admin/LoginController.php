@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\admin;
+namespace App\controllers\admin;
 
-use app\core\Controller;
-use app\core\LoginHelper;
-use app\core\Request;
-use app\core\Response;
-use app\core\traits\ValidationTrait;
-use app\models\Admin;
+use App\core\Controller;
+use App\core\LoginHelper;
+use App\core\Request;
+use App\core\Response;
+use App\core\traits\ValidationTrait;
+use App\models\Admin;
 
 class LoginController extends Controller
 {

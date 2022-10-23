@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\core\db;
+namespace App\core\db;
 
-use app\core\Application;
-use app\core\exception\CommonException;
-use app\core\Model;
-use Exception;
+use App\core\Application;
+use App\core\exception\CommonException;
+use App\core\Model;
 use PDO;
 
 abstract class DBModel extends Model
@@ -27,7 +26,7 @@ abstract class DBModel extends Model
         $this->attributes = $this->attributes();
     }
 
-    public function save(array $data): int|Exception
+    public function save(array $data): int|CommonException
     {
         try {
             $params = array_map(fn ($attr) => ":$attr", $this->attributes);
@@ -42,7 +41,7 @@ abstract class DBModel extends Model
         }
     }
 
-    public function update(array $data, int $id)
+    public function update(array $data, int $id): bool|CommonException
     {
         try {
             $attributes = array_keys($data);
@@ -55,7 +54,7 @@ abstract class DBModel extends Model
         }
     }
 
-    public function get(array $columns, string $orderBy, string $sortBy)
+    public function get(array $columns, string $orderBy, string $sortBy): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
@@ -66,7 +65,7 @@ abstract class DBModel extends Model
         }
     }
 
-    public function findPostsByCategoryId(int $id): object|array
+    public function findPostsByCategoryId(int $id): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT posts.* FROM posts
@@ -81,7 +80,7 @@ abstract class DBModel extends Model
         }
     }
 
-    public function findOrFail(int $id): array
+    public function findOrFail(int $id): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT * FROM $this->tableName WHERE id = $id");
@@ -92,11 +91,12 @@ abstract class DBModel extends Model
         }
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool|CommonException
     {
         try {
             $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
             $statement->execute();
+            return true;
         } catch (CommonException $e) {
             throw ($e->dump());
         }
@@ -125,6 +125,6 @@ abstract class DBModel extends Model
 
     public static function prepare(string $sql): mixed
     {
-        return Application::$app->db->pdo->prepare($sql);
+        return Application::$app->db->prepare($sql);
     }
 }

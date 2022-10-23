@@ -1,6 +1,6 @@
 <?php
 
-use app\core\Application;
+use App\core\Application;
 
 class m0001_create_users_table
 {
@@ -17,9 +17,9 @@ class m0001_create_users_table
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=INNODB;";
         $db->pdo->exec($SQL);
-    }   
+    }
 
-    public function down() 
+    public function down()
     {
         $db = Application::$app->db;
         $SQL = "DROP TABLE users";

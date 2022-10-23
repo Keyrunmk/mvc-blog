@@ -1,10 +1,10 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\CategoryPostContract;
-use app\core\exception\CommonException;
-use app\models\CategoryPost;
+use App\core\contracts\CategoryPostContract;
+use App\core\exception\CommonException;
+use App\models\CategoryPost;
 use Exception;
 
 class CategoryPostRepository extends BaseRepository implements CategoryPostContract

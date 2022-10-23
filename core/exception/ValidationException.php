@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace app\core\exception;
+namespace App\core\exception;
 
-use app\core\Response;
+use App\core\Response;
 use Exception;
 
 class ValidationException extends Exception

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Unit;
+namespace App\tests\Unit;
 
-use app\core\Request;
-use app\core\Response;
-use app\core\Router;
-use app\core\singletons\Container;
+use App\core\Request;
+use App\core\Response;
+use App\core\Router;
+use App\core\singletons\Container;
 use PHPUnit\Framework\TestCase;
 
 class RouterTest extends TestCase
@@ -27,11 +27,9 @@ class RouterTest extends TestCase
         );
     }
 
-    
     public function test_it_registers_a_get_route_test(): void
     {
         //given router class
-        
 
         //when get request is made
         $this->router->get("/users", ["Users", "index"]);

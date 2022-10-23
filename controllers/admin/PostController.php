@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\admin;
+namespace App\controllers\admin;
 
-use app\core\Application;
-use app\core\Controller;
-use app\core\exception\ValidationException;
-use app\core\repositories\CategoryPostRepository;
-use app\core\repositories\CategoryRepository;
-use app\core\repositories\PostRepository;
-use app\core\Request;
-use app\core\traits\ValidationTrait;
-use app\models\Post;
+use App\core\Application;
+use App\core\Controller;
+use App\core\exception\ValidationException;
+use App\core\repositories\CategoryPostRepository;
+use App\core\repositories\CategoryRepository;
+use App\core\repositories\PostRepository;
+use App\core\Request;
+use App\core\traits\ValidationTrait;
+use App\models\Post;
 
 class PostController extends Controller
 {
@@ -48,7 +48,7 @@ class PostController extends Controller
 
         if ($this->model->loadData($data)) {
             if (!$this->validate([
-                "name" => ["required", "string","unique"],
+                "name" => ["required", "string", "unique"],
                 "status" => ["required"],
             ])) {
                 throw new ValidationException($this->errors);
@@ -69,7 +69,7 @@ class PostController extends Controller
             }
             throw new ValidationException(["wrong data given, no records were persisted"]);
         }
-        
+
         // Application::$app->session->setFlash("Success", "Product Added");
         Application::$app->response->redirect("/admin/posts");
     }

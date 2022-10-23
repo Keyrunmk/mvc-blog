@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\core\db;
+namespace App\core\db;
 
 class Database
 {
@@ -16,8 +16,6 @@ class Database
         $this->pdo = new \PDO($dsn, $user, $password);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
-
-    
 
     public function prepare(string $sql): object
     {
