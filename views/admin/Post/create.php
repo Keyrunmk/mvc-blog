@@ -24,16 +24,16 @@ $this->title = "Add post";
                         <select name="category" id="category" class="form-control">
                             <?php foreach ($categories as $category) {
                                 echo "<option value='$category[id]'>$category[name]</option>";
-                            }?>
+                            } ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="name">Name <span class="m-l-5 text-danger"></span></label>
-                        <input class="form-control" type="text" name="name" id="name" value="" />
+                        <input class="form-control" type="text" name="name" id="name" value="" maxlength="50" />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="status">Status</label>
-                        <textarea class="form-control" rows="4" name="status" id="status"></textarea>
+                        <textarea class="form-control" rows="4" name="status" id="status" maxlength="200"></textarea>
                     </div>
                 </div>
                 <div class="tile-footer">

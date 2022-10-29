@@ -1,13 +1,13 @@
 <?php
 
-namespace app\core\middlewares;
+namespace App\core\middlewares;
 
-use app\core\Application;
-use app\core\LoginHelper;
+use App\core\Application;
+use App\core\LoginHelper;
 
 class AdminAuthenticationMiddleware extends BaseMiddleware
 {
-    public function __construct(string $model, array|string|null $actions = [])
+    public function __construct(string $model, array|string $actions = [])
     {
         $this->model = $model;
         $this->actions = $actions;

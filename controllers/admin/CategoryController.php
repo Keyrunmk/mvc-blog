@@ -1,23 +1,24 @@
 <?php
 
-namespace app\controllers\admin;
+declare(strict_types=1);
 
-use app\core\Application;
-use app\core\contracts\CategoryContract;
-use app\core\Controller;
-use app\core\db\DBModel;
-use app\core\repositories\CategoryRepository;
-use app\core\Request;
-use app\core\traits\ValidationTrait;
-use app\models\Category;
+namespace App\controllers\admin;
+
+use App\core\Application;
+use App\core\contracts\CategoryContract;
+use App\core\Controller;
+use App\core\exception\CommonException;
+use App\core\exception\ValidationException;
+use App\core\repositories\PostRepository;
+use App\core\Request;
+use App\core\Response;
+use App\models\Category;
 
 class CategoryController extends Controller
 {
-    use ValidationTrait;
-
     protected Category $model;
 
-    public function __construct(protected CategoryContract $categoryRepository)
+    public function __construct(protected CategoryContract $categoryRepository, protected PostRepository $postRepository)
     {
         $this->layout = "admin/app";
         $this->model = new Category();
@@ -36,19 +37,22 @@ class CategoryController extends Controller
         return $this->render("admin/categories/create");
     }
 
-    public function store(Request $request): void
+    public function store(Request $request, Response $response): void
     {
         if ($this->model->loadData($request->getBody())) {
             if (
                 $this->validate([
-                    "name" => ["required"],
+                    "name" => ["required", "string", "unique"],
                     "description" => ["required"]
                 ]) && $this->categoryRepository->createCategory($request->getBody())
             ) {
                 // Application::$app->session->setFlash("Success", "Category Added");
-                Application::$app->response->redirect("/admin/category");
+                $response->redirect("/admin/category");
+                exit;
             }
+            throw new ValidationException($this->errors);
         }
+        throw new ValidationException(["Failed to load data beacause of wrong data types"]);
     }
 
     public function update(Request $request): string
@@ -67,7 +71,22 @@ class CategoryController extends Controller
     public function delete(Request $request): string
     {
         $id = (int) $request->getBody()["id"];
-        $this->categoryRepository->deleteCategory($id);
+        $app = Application::$app->db->pdo;
+        try {
+            $app->beginTransaction();
+            $posts = $this->postRepository->findPostsByCategory($id);
+            foreach ($posts as $post) {
+                $this->postRepository->deletePost($post["id"]);
+            }
+
+            $this->categoryRepository->deleteCategory($id);
+            $app->commit();
+        } catch (CommonException $e) {
+            if ($app->inTransaction()) {
+                $app->rollBack();
+            }
+            return $e->dump();
+        }
 
         return $this->index();
     }
