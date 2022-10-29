@@ -37,7 +37,7 @@ abstract class DBModel extends Model
             $statement->execute();
             return (int) Application::$app->db->pdo->lastInsertId();
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
         }
     }
 
@@ -50,34 +50,68 @@ abstract class DBModel extends Model
             $statement->execute();
             return true;
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
         }
     }
 
-    public function get(array $columns, string $orderBy, string $sortBy): array|CommonException
+    public function get(array $columns = array('*'), string $orderBy = 'id', string $sortBy = 'desc'): array|CommonException
     {
         try {
             $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
         }
     }
 
-    public function findPostsByCategoryId(int $id): array|CommonException
+    public function findManyToManyById(string $firstTable, string $secondTable, string $linkTable, int $id, string $column = "*"): array|CommonException
     {
         try {
-            $statement = self::prepare("SELECT posts.* FROM posts
-                    INNER JOIN categories_posts ON posts.id = categories_posts.post_id
-                    INNER JOIN categories ON categories_posts.category_id = categories.id
-                    WHERE categories.id = $id");
+            $firstTable_id = $firstTable . "_id";
+            $secondTable_id = $secondTable . "_id";
+            $firstTable = $this->makePlural($firstTable);
+            $secondTable = $this->makePlural($secondTable);
+
+            $statement = self::prepare("SELECT $firstTable.$column FROM $firstTable
+                    INNER JOIN $linkTable ON $firstTable.id = $linkTable.$firstTable_id
+                    INNER JOIN $secondTable ON $linkTable.$secondTable_id = $secondTable.id
+                    WHERE $secondTable.id = $id");
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
         }
+    }
+
+    public function findManyToMany(string $firstTable, string $secondTable, string $linkTable, string $column = "*"): array|CommonException
+    {
+        try {
+            $firstTable_id = $firstTable . "_id";
+            $secondTable_id = $secondTable . "_id";
+            $firstTable = $this->makePlural($firstTable);
+            $secondTable = $this->makePlural($secondTable);
+
+            $statement = self::prepare("SELECT $firstTable.$column FROM $firstTable
+                        INNER JOIN $linkTable ON $firstTable.id = $linkTable.$firstTable_id
+                        INNER JOIN $secondTable ON $linkTable.$secondTable_id = $secondTable.id");
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        } catch (CommonException $e) {
+            throw ($e);
+        }
+    }
+
+    private function makePlural(string $tableName): string
+    {
+        $y = strpos($tableName, "y");
+        if ($y) {
+            $tableName = substr($tableName, 0, $y);
+            return trim($tableName = $tableName . "ies");
+        }
+        return trim($tableName . "s");
     }
 
     public function findOrFail(int $id): array|CommonException
@@ -87,18 +121,29 @@ abstract class DBModel extends Model
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
         }
     }
 
-    public function delete(int $id): bool|CommonException
+    public function deleteById(int $id): bool|CommonException
     {
         try {
             $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return true;
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
+        }
+    }
+
+    public function delete()
+    {
+        try {
+            $statement = self::prepare("DELETE FROM $this->tableName");
+            $statement->execute();
+            return true;
+        } catch (CommonException $e) {
+            throw ($e);
         }
     }
 
@@ -118,7 +163,28 @@ abstract class DBModel extends Model
             $statement->execute();
             return $statement->fetchObject(static::class);
         } catch (CommonException $e) {
-            throw ($e->dump());
+            throw ($e);
+        }
+        // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
+    }
+
+    public static function findAll(array $where): array|CommonException // [email => test@example.com, firstname => test]
+    {
+        try {
+            $class = new (static::class);
+            $tableName = $class->tableName();
+            $attributes = array_keys($where);
+
+            $sql = implode("AND", array_map(fn ($attr) => "$attr = :$attr", $attributes));
+            $statement = self::prepare("SELECT * FROM $tableName WHERE $sql");
+            foreach ($where as $key => $item) {
+                $statement->bindValue(":$key", $item);
+            }
+
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (CommonException $e) {
+            throw ($e);
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }

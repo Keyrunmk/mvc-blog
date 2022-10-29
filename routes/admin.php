@@ -18,6 +18,9 @@ $app->router->get("/admin/login", [LoginController::class, "showLoginForm"]);
 $app->router->post("/admin/login", [LoginController::class, "login"]);
 $app->router->get("/admin/logout", [LoginController::class, "logout"]);
 
+$app->router->get("/admin/dashboard", [AdminController::class, "dashboard"]);
+$app->router->get("/admin/settings", [AdminController::class, "settings"]);
+
 $app->router->get("/admin/category", [CategoryController::class, "index"]);
 $app->router->get("/admin/category/create", [CategoryController::class, "create"]);
 $app->router->post("/admin/category/store", [CategoryController::class, "store"]);

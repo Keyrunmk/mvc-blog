@@ -40,10 +40,6 @@ Features of this mvc framework are as follows;
 
 * Middlewares
 
-* Application Events
-
-* Framework reusable/installable core
-
 Features of the blog website done through the mvc:
 * Admin login/registration/authentication/authorizaiton
     - admin has all the crud accessibility

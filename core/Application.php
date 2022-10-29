@@ -31,7 +31,7 @@ class Application
     public Container $container;
 
     //nullable props
-    public ?Model $model;
+    public ?Model $model = null;
     public ?Controller $controller = null;
 
     public function __construct($rootPath, array $config)
@@ -90,7 +90,7 @@ class Application
     }
 
     //this runs after all requests are done
-    public function run(): mixed
+    public function run()
     {
         try {
             echo $this->router->resolve();

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\user;
+namespace App\controllers\user;
 
-use app\core\Controller;
-use app\core\db\DBModel;
-use app\core\exception\ValidationException;
-use app\core\LoginHelper;
-use app\core\middlewares\UserAuthenticationMiddleware;
-use app\core\Request;
-use app\core\Response;
-use app\core\traits\ValidationTrait;
-use app\models\User;
+use App\core\Controller;
+use App\core\db\DBModel;
+use App\core\exception\ValidationException;
+use App\core\LoginHelper;
+use App\core\middlewares\UserAuthenticationMiddleware;
+use App\core\Request;
+use App\core\Response;
+use App\core\traits\ValidationTrait;
+use App\models\User;
 
 class UserLoginController extends Controller
 {
     use ValidationTrait;
-    
+
     protected DBModel $model;
-    
+
     public function __construct()
     {
         $this->registerMiddleware(new UserAuthenticationMiddleware("user", ["profile"]));

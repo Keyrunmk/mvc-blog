@@ -71,7 +71,7 @@ class BaseRepository implements BaseContract
     public function delete(int $id): mixed
     {
         try {
-            return $this->model->delete($id);
+            return $this->model->deleteById($id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
             throw $exception->dump();

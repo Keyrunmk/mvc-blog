@@ -21,7 +21,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->all($columns, $order, $sort);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -35,18 +35,18 @@ class PostRepository extends BaseRepository implements PostContract
             return $result;
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
     public function findPostsByCategory(int $id)
     {
         try {
-            $result =  $this->model->findPostsByCategoryId($id);
+            $result =  $this->model->findManyToManyById("post", "category", "categories_posts",$id);
             return $result;
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -56,7 +56,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->save($data);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -66,7 +66,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->update($data, $id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -76,7 +76,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->delete($id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 }

@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace app\controllers\user;
+namespace App\controllers\user;
 
-use app\core\Controller;
-use app\core\middlewares\UserAuthenticationMiddleware;
-use app\core\repositories\AdminRepository;
-use app\core\repositories\CategoryRepository;
-use app\core\repositories\PostRepository;
-use app\core\Request;
+use App\core\Controller;
+use App\core\middlewares\UserAuthenticationMiddleware;
+use App\core\repositories\CategoryRepository;
+use App\core\repositories\PostRepository;
+use App\core\Request;
 
 class SiteController extends Controller
 {

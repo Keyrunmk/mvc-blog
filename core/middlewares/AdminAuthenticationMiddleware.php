@@ -7,7 +7,7 @@ use App\core\LoginHelper;
 
 class AdminAuthenticationMiddleware extends BaseMiddleware
 {
-    public function __construct(string $model, array|string|null $actions = [])
+    public function __construct(string $model, array|string $actions = [])
     {
         $this->model = $model;
         $this->actions = $actions;

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 use App\core\Application;
 
@@ -17,4 +17,4 @@ $config = [
 
 $app = new Application(__DIR__, $config);
 
-$app->dbMigration->applyMigrations();
+$app->dbMigration->rollback();
