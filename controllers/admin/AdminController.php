@@ -18,21 +18,17 @@ class AdminController extends Controller
         $this->registerMiddleware(new RoleMiddleware(Application::$app->admin, ["page-admin"]));
     }
 
-    public function dashboard()
+    public function dashboard(): void
     {
         echo("hello from dashboard");
     }
 
     public function index(): string
     {
-        // $admin = Application::$app->admin;
-        // var_dump($admin->hasRole("page-admin"));
-        // var_dump($admin->hasPermission("manage-page"));
-        // exit;
         return $this->render("admin/dashboard/index");
     }
 
-    public function settings()
+    public function settings(): void
     {
         echo("hello from settings");
     }

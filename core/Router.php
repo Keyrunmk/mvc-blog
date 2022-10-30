@@ -14,8 +14,9 @@ class Router
     protected Request $request;
     protected Response $response;
     private Container $container;
+    private static array $prefix = [];
 
-    protected array $routes = [];
+    protected static array $routes = [];
 
     public function __construct(Request $request, Response $response, Container  $container)
     {
@@ -24,22 +25,44 @@ class Router
         $this->container = $container;
     }
 
-    public function get(string $path, array|Closure|string $callback): void
+    public static function group(array $data, Closure $callback)
     {
-        $this->routes["get"][$path] = $callback;
+        if (in_array("prefix", array_keys($data))) {
+            if (count(self::$prefix)>1) {
+                self::$prefix = [self::$prefix[0]];
+            }
+            self::$prefix[] = $data["prefix"];
+            return call_user_func($callback);
+            // if (in_array("middleware", array_keys($data))) {
+            //     var_dump($data["middleware"]);
+            //     exit;
+            // }
+        }
     }
 
-    public function post(string $path, array $callback): void
+    public static function get(string $path, array|Closure|string $callback): void
     {
-        $this->routes["post"][$path] = $callback;
+        if (self::$prefix) {
+            self::$routes["get"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
+        } else {
+            self::$routes["get"][$path] = $callback;
+        }
+    }
+
+    public static function post(string $path, array $callback): void
+    {
+        if (self::$prefix) {
+            self::$routes["post"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
+        } else {
+            self::$routes["post"][$path] = $callback;
+        }
     }
 
     public function resolve(): mixed
     {
         $path = $this->request->getPath();
         $method = $this->request->method();
-        $callback = $this->routes[$method][$path] ?? false;
-
+        $callback = self::$routes[$method][$path] ?? false;
         if ($callback === false) {
             throw new NotFoundException();
         }

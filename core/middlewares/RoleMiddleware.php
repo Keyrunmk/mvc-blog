@@ -7,7 +7,7 @@ use App\core\Model;
 
 class RoleMiddleware extends BaseMiddleware
 {
-    public function __construct(Model $model, array $roles, array $permissions = null)
+    public function __construct(?Model $model, array $roles, array $permissions = null)
     {
         $this->model = $model;
         $this->roles = $roles;

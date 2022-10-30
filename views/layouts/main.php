@@ -1,7 +1,7 @@
 <?php
 
-use app\core\Application;
-use app\core\LoginHelper;
+use App\core\Application;
+use App\core\LoginHelper;
 
 ?>
 
