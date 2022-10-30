@@ -1,10 +1,9 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\BaseContract;
-use app\core\db\DBModel;
-use app\core\exception\CommonException;
+use App\core\contracts\BaseContract;
+use App\core\exception\CommonException;
 use Exception;
 
 class BaseRepository implements BaseContract
@@ -72,7 +71,7 @@ class BaseRepository implements BaseContract
     public function delete(int $id): mixed
     {
         try {
-            return $this->model->delete($id);
+            return $this->model->deleteById($id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
             throw $exception->dump();

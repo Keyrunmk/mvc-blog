@@ -1,6 +1,6 @@
 <?php
 
-use app\core\Application;
+use App\core\Application;
 
 class m0003_create_admins_table
 {

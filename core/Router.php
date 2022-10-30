@@ -1,65 +1,77 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
 
-use app\core\exception\NotFoundException;
-use app\core\Request;
-use app\core\singletons\Container;
+namespace App\core;
+
+use App\core\exception\NotFoundException;
+use App\core\Request;
+use App\core\singletons\Container;
 use Closure;
 
 class Router
 {
-    public Request $request;
+    protected Request $request;
+    protected Response $response;
+    private Container $container;
+    private static array $prefix = [];
 
-    public Response $response;
+    protected static array $routes = [];
 
-    protected array $routes = [];
-
-    public function __construct(Request $request, Response $response, private Container  $container)
+    public function __construct(Request $request, Response $response, Container  $container)
     {
         $this->request = $request;
         $this->response = $response;
+        $this->container = $container;
     }
 
-    /**
-     * Returns the function passed from index.php, e.g. [SiteController::class,"contact"]
-     */
-    public function get(string $path,array|Closure|string $callback)
+    public static function group(array $data, Closure $callback)
     {
-        $this->routes["get"][$path] = $callback;
+        if (in_array("prefix", array_keys($data))) {
+            if (count(self::$prefix)>1) {
+                self::$prefix = [self::$prefix[0]];
+            }
+            self::$prefix[] = $data["prefix"];
+            return call_user_func($callback);
+            // if (in_array("middleware", array_keys($data))) {
+            //     var_dump($data["middleware"]);
+            //     exit;
+            // }
+        }
     }
 
-    /**
-     * Returns the same as get but with post as it"s first associative array content
-     */
-    public function post(string $path,array $callback)
+    public static function get(string $path, array|Closure|string $callback): void
     {
-        $this->routes["post"][$path] = $callback;
+        if (self::$prefix) {
+            self::$routes["get"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
+        } else {
+            self::$routes["get"][$path] = $callback;
+        }
     }
 
-    public function resolve()
+    public static function post(string $path, array $callback): void
     {
-        //returns the pathname as string without requests
+        if (self::$prefix) {
+            self::$routes["post"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
+        } else {
+            self::$routes["post"][$path] = $callback;
+        }
+    }
+
+    public function resolve(): mixed
+    {
         $path = $this->request->getPath();
-
-        //returns the request method in lowercase
         $method = $this->request->method();
-
-        //returns the path and method as array contents, if there is no method it returns false
-        $callback = $this->routes[$method][$path] ?? false;
-
-        //if the $callback returns false, set response to 404 error and load 404 error page
+        $callback = self::$routes[$method][$path] ?? false;
         if ($callback === false) {
             throw new NotFoundException();
         }
 
-        // if callback is just a stirng....this will assume view file name and render that  
+        // if callback is just a stirng....this will assume it a view file name and render that
         if (is_string($callback)) {
             return Application::$app->view->renderView($callback);
         }
 
-        //if the callback is an array, replace the first array content with the mentioned class instance
-        //e.g. ["SiteController::class","contact"] in this case the "SiteController::class" is replaced with new SiteController class instace
         if (is_array($callback)) {
             $controller = $this->container->get($callback[0]);
 
@@ -73,7 +85,6 @@ class Router
             }
         }
 
-        //this will call the SiteController class from the array and take the second argument i.e. contact is the case as the argument 
         return call_user_func($callback, $this->request, $this->response);
     }
 }
