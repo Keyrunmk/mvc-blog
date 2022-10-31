@@ -1,6 +1,6 @@
 <?php
 
-use app\core\Application;
+use App\core\Application;
 
 class m0001_create_users_table
 {
@@ -12,14 +12,13 @@ class m0001_create_users_table
             email VARCHAR(255) NOT NULL,
             firstname VARCHAR(255) NOT NULL,
             lastname VARCHAR(255) NOT NULL,
-            status TINYINT NOT NULL,
-            password VARCHAR(255),
+            password VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=INNODB;";
         $db->pdo->exec($SQL);
-    }   
+    }
 
-    public function down() 
+    public function down()
     {
         $db = Application::$app->db;
         $SQL = "DROP TABLE users";

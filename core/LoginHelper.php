@@ -1,20 +1,17 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
 
-use app\core\Application;
-use app\core\db\DBModel;
-use app\core\exception\ValidationException;
+namespace App\core;
+
+use App\core\Application;
+use App\core\db\DBModel;
+use App\core\exception\ValidationException;
 
 class LoginHelper
 {
     public static string $email = '';
     public static string $password = '';
-
-    public static function primaryKey(): string
-    {
-        return 'id';
-    }
 
     public static function isGuest(string $model): bool
     {
@@ -53,7 +50,7 @@ class LoginHelper
         $app->$class = $model;
         $primaryKey = $model->primaryKey();
         $primaryValue = $model->$primaryKey;
-        
+
         $app->session->set($class, $primaryValue);
         return true;
     }

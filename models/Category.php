@@ -1,8 +1,10 @@
 <?php
 
-namespace app\models;
+declare(strict_types=1);
 
-use app\core\db\DBModel;
+namespace App\models;
+
+use App\core\db\DBModel;
 
 class Category extends DBModel
 {
@@ -23,4 +25,4 @@ class Category extends DBModel
     {
         return 'id';
     }
-}   
+}

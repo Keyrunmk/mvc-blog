@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/vendor/autoload.php';
 
-use app\core\Application;
+use App\core\Application;
 
 $envPath = ".env";
 include 'LoadEnv.php';

@@ -1,11 +1,16 @@
 <?php
 
-namespace app\models;
+declare(strict_types=1);
 
-use app\core\db\DBModel;
+namespace App\models;
+
+use App\core\db\DBModel;
+use App\core\traits\RolesAndPermissions;
 
 class Admin extends DBModel
 {
+    use RolesAndPermissions;
+
     public string $email = '';
     public string $password = '';
 

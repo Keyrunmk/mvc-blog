@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-$env = fopen($envPath, "r") or die("Unable to read .env");
-
 $data = [];
+
+$env = fopen($envPath, "r") or die("Unable to read .env");
 
 while (!feof($env)) {
     $line = fgets($env);

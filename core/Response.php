@@ -1,6 +1,8 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
+
+namespace App\core;
 
 class Response
 {
@@ -9,11 +11,6 @@ class Response
     public function setStatusCode(int $code): void
     {
         http_response_code($code);
-    }
-
-    public function message(string $msg): void
-    {
-        $this->message = $msg;
     }
 
     public function redirect(string $url): void
