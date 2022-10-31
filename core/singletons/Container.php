@@ -10,13 +10,13 @@ class Container extends Singleton
 {
     private array $entries = [];
 
-    public function get(string $className): mixed
+    public function get(string $className): object
     {
         if ($this->has($className)) {
             $entry = $this->entries[$className];
 
             if (is_callable($entry)) {
-                return $entry($this);
+                return new $entry($this);
             }
 
             $className = $entry;
@@ -34,7 +34,7 @@ class Container extends Singleton
         $this->entries[$className] = $concreteClassName;
     }
 
-    public function resolve(string $className): mixed
+    public function resolve(string $className): object
     {
         // Inspect the class that we are trying to get from the controller
         $reflectionClass = new \ReflectionClass($className);
@@ -48,14 +48,14 @@ class Container extends Singleton
 
         if (!$constructor) {
             // $reflectionClass->newInstance();
-            return new $className;
+            return new $className();
         }
 
         // Inspect the constructor parameters (dependencies)
         $parameters = $constructor->getParameters();
 
         if (!$parameters) {
-            return new $className;
+            return new $className();
         }
 
         // If the constructor parameter is a class then try to resolve that using the container

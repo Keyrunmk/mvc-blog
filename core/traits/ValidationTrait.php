@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\core\traits;
 
 use App\core\Application;
 
 trait ValidationTrait
 {
-    public static string $required = "required";
-    public static string $string = "string";
-    public static string $int = "int";
-    public static string $email = "email";
-    public static string $min = "min";
-    public static string $max = "max";
-    public static string $match = "match";
-    public static string $unique = "unique";
+    private static string $required = "required";
+    private static string $string = "string";
+    private static string $int = "int";
+    private static string $email = "email";
+    private static string $min = "min";
+    private static string $max = "max";
+    private static string $match = "match";
+    private static string $unique = "unique";
 
     public array $errors = [];
 
@@ -25,7 +23,6 @@ trait ValidationTrait
         foreach ($data as $attribute => $rules) {
             //value represented by the attribute
             $value = $this->model->$attribute;
-
             //iterating over rules set in attribute
             foreach ($rules as $rule) {
                 $ruleName = $rule;
@@ -33,11 +30,12 @@ trait ValidationTrait
                 if (is_array($ruleName)) {
                     $ruleName = array_key_first($rule);
                 }
+
                 if ($ruleName === self::$required && !$value) {
                     $this->addErrorForRule($attribute, self::$required);
                 }
 
-                if ($ruleName === self::$string && !preg_match("/^[a-zA-Z-' ]*$/", $value) ) {
+                if ($ruleName === self::$string && !preg_match("/^[a-zA-Z-' ]*$/", $value)) {
                     $this->addErrorForRule($attribute, self::$string);
                 }
 
@@ -49,7 +47,7 @@ trait ValidationTrait
                     $this->addErrorForRule($attribute, self::$email);
                 }
 
-                if ($ruleName === self::$min && strlen($value) < $rule['min']){
+                if ($ruleName === self::$min && strlen($value) < $rule['min']) {
                     $this->addErrorForRule($attribute, self::$min, $rule);
                 }
 
@@ -76,7 +74,7 @@ trait ValidationTrait
         return empty($this->errors);
     }
 
-    public function addErrorForRule(string $attribute, string $rule, $params = [])
+    public function addErrorForRule(string $attribute, string $rule, $params = []): void
     {
         $message = $this->errorMessages()[$rule] ?? '';
 
@@ -87,7 +85,7 @@ trait ValidationTrait
         $this->errors[$attribute][] = $message;
     }
 
-    public function errorMessages()
+    public function errorMessages(): array
     {
         return [
             self::$required => "This field is required",
@@ -101,7 +99,7 @@ trait ValidationTrait
         ];
     }
 
-    public function addError(string $attribute, string $message)
+    public function addError(string $attribute, string $message): void
     {
         $this->errors[$attribute][] = $message;
     }
@@ -111,7 +109,7 @@ trait ValidationTrait
         return $this->errors[$attribute] ?? false;
     }
 
-    public function getFirstError($attribute)
+    public function getFirstError($attribute): string
     {
         return $this->errors[$attribute][0] ?? '';
     }

@@ -13,10 +13,12 @@ class Router
 {
     protected Request $request;
     protected Response $response;
-    private Container $container;
-    private static array $prefix = [];
+    protected Container $container;
+    protected array $prefix = [];
 
-    protected static array $routes = [];
+    protected array $routes = [];
+
+    protected array $routeMiddlewares = [];
 
     public function __construct(Request $request, Response $response, Container  $container)
     {
@@ -25,44 +27,56 @@ class Router
         $this->container = $container;
     }
 
-    public static function group(array $data, Closure $callback)
+    public function group(array $data, Closure $closure): mixed
     {
         if (in_array("prefix", array_keys($data))) {
-            if (count(self::$prefix)>1) {
-                self::$prefix = [self::$prefix[0]];
+            $this->prefix[] = $data["prefix"];
+            if (in_array("middleware", array_keys($data))) {
+                $this->routeMiddlewares[] = $data["middleware"];
             }
-            self::$prefix[] = $data["prefix"];
-            return call_user_func($callback);
-            // if (in_array("middleware", array_keys($data))) {
-            //     var_dump($data["middleware"]);
-            //     exit;
-            // }
+            call_user_func($closure);
+            array_pop($this->prefix);
+            array_pop($this->routeMiddlewares);
+            return true;
+        }
+        return call_user_func($closure);
+    }
+
+    public function get(string $path, array|Closure|string $callback): void
+    {
+        if ($this->prefix) {
+            $this->routes["get"][implode("/", $this->prefix) . "$path"] = $this->addCallback($callback);
+        } else {
+            $this->routes["get"][$path] = $this->addCallback($callback);
         }
     }
 
-    public static function get(string $path, array|Closure|string $callback): void
+    public function post(string $path, array $callback): void
     {
-        if (self::$prefix) {
-            self::$routes["get"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
+        if ($this->prefix) {
+            $this->routes["post"][implode("/", $this->prefix) . "$path"] = $this->addCallback($callback);
         } else {
-            self::$routes["get"][$path] = $callback;
+            $this->routes["post"][$path] = $this->addCallback($callback);
         }
     }
 
-    public static function post(string $path, array $callback): void
+    private function addCallback($callback): array
     {
-        if (self::$prefix) {
-            self::$routes["post"]["/" . implode("/", self::$prefix) . "$path"] = $callback;
-        } else {
-            self::$routes["post"][$path] = $callback;
+        if ($this->routeMiddlewares) {
+            return [
+                "callback" => $callback,
+                "middleware" => $this->routeMiddlewares,
+            ];
         }
+        return $callback;
     }
 
     public function resolve(): mixed
     {
         $path = $this->request->getPath();
         $method = $this->request->method();
-        $callback = self::$routes[$method][$path] ?? false;
+        $callback = $this->checkForMiddleware($this->routes[$method][$path] ?? false);
+
         if ($callback === false) {
             throw new NotFoundException();
         }
@@ -86,5 +100,21 @@ class Router
         }
 
         return call_user_func($callback, $this->request, $this->response);
+    }
+
+    protected function checkForMiddleware(array $data): array
+    {
+        if (isset($data["middleware"][0])) {
+            $middlewares = $data["middleware"][0];
+            if (is_string($middlewares)) {
+                $this->container->get($middlewares)->execute();
+                return $data["callback"];
+            }
+            foreach ($middlewares as $middleware) {
+                $this->container->get($middleware)->execute();
+            }
+            return $data["callback"];
+        }
+        return $data;
     }
 }

@@ -15,17 +15,14 @@ class Controller
     public string $layout = "layouts/main";
     public string $action = '';
 
-    /**
-     * @var \App\core\middlewares\BaseMiddleware[]
-     */
     protected array $middlewares = [];
 
-    public function setLayout(String $layout)
+    public function setLayout(string $layout): void
     {
         $this->layout = $layout;
     }
 
-    public function render(string $view, array $params = []): String
+    public function render(string $view, array $params = []): string
     {
         return Application::$app->view->renderView($view, $params);
     }
@@ -35,14 +32,11 @@ class Controller
         return Application::$app->view->renderSingleView($view, $params);
     }
 
-    public function registerMiddleware(BaseMiddleware $middleware)
+    public function registerMiddleware(BaseMiddleware $middleware): void
     {
         $this->middlewares[] = $middleware;
     }
 
-    /**
-     * @return \App\core\middlewares\BaseMiddleware[]
-     */
     public function getMiddlewares(): array
     {
         return $this->middlewares;

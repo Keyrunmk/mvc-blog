@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\controllers\user;
+namespace App\core\controllers\user;
 
+use App\core\contracts\CategoryContract;
+use App\core\contracts\PostContract;
 use App\core\Controller;
 use App\core\middlewares\UserAuthenticationMiddleware;
 use App\core\repositories\CategoryRepository;
@@ -12,31 +14,28 @@ use App\core\Request;
 
 class SiteController extends Controller
 {
-    public function __construct(protected PostRepository $postRepository, protected CategoryRepository $categoryRepository)
+    protected PostRepository $postRepository;
+    protected CategoryRepository $categoryRepository;
+
+    public function __construct(PostContract $postRepository,CategoryContract $categoryRepository)
     {
-        $this->registerMiddleware(new UserAuthenticationMiddleware("user", [""]));
+        $this->postRepository = $postRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
-    /**
-     * Load home page
-     */
     public function home(): string
     {
         $categories = $this->categoryRepository->listCategories();;
-        $posts = $this->postRepository->findPostsByCategory(10);
-        $notices = $this->postRepository->findPostsByCategory(9);
 
         $params = [
             "name" => "Blog",
             "categories" => $categories,
-            "posts" => $posts,
-            "notices" => $notices,
         ];
 
         return $this->render("home", $params);
     }
 
-    public function showPosts(Request $request)
+    public function showPosts(Request $request): string
     {
         $category_id = (int) $request->getBody()['category_id'];
         $posts = $this->postRepository->findPostsByCategory($category_id);

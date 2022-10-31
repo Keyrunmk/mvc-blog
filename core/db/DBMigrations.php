@@ -9,15 +9,15 @@ use Exception;
 
 class DBMigrations extends Database
 {
-    public function rollback()
+    public function rollback(): void
     {
         $appliedMigrations = $this->getAppliedMigrations();
-        $files = scandir(Application::$ROOT_DIR . '/migrations');
+        // $files = scandir(Application::$ROOT_DIR . '/migrations');
 
-        $toDeleteMigrations = array_merge(array_diff($files, $appliedMigrations), $appliedMigrations);
+        // $toDeleteMigrations = array_diff($files, $appliedMigrations);
 
         $deletedMigrations = [];
-        foreach ($toDeleteMigrations as $migration) {
+        foreach ($appliedMigrations as $migration) {
             if ($migration === "." || $migration === "..") {
                 continue;
             }

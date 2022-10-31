@@ -6,7 +6,7 @@ namespace App\core;
 
 abstract class Model
 {
-    abstract static public function primaryKey(): string;
+    abstract public static function primaryKey(): string;
 
     /**
      * Check if the given key matches the properties in child class

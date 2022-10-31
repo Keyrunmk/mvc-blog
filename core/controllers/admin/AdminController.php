@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\controllers\admin;
+namespace App\core\controllers\admin;
 
 use App\core\Application;
 use App\core\Controller;
@@ -14,8 +14,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->layout = "admin/app";
-        $this->registerMiddleware(new AdminAuthenticationMiddleware("admin", []));
-        $this->registerMiddleware(new RoleMiddleware(Application::$app->admin, ["page-admin"]));
+        // $this->registerMiddleware(new RoleMiddleware(Application::$app->admin, ["page-admin"]));
     }
 
     public function dashboard(): void

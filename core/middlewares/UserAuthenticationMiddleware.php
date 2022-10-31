@@ -5,22 +5,22 @@ namespace App\core\middlewares;
 use App\core\Application;
 use App\core\exception\ForbiddenException;
 use App\core\LoginHelper;
+use App\models\User;
 
 class UserAuthenticationMiddleware extends BaseMiddleware
 {
     public array $actions = [];
 
-    public string $model;
+    public User $user;
 
-    public function __construct(string $model, array $actions = [])
+    public function __construct(User $user)
     {
-        $this->model = $model;
-        $this->actions = $actions;
+        $this->user = $user;
     }
 
     public function execute()
     {
-        if (LoginHelper::isGuest($this->model)) {
+        if (LoginHelper::isGuest("user")) {
             if (empty($this->actions) || in_array(Application::$app->controller->action, $this->actions)) {
                 throw new ForbiddenException();
             }

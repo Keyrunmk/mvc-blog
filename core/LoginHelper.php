@@ -13,11 +13,6 @@ class LoginHelper
     public static string $email = '';
     public static string $password = '';
 
-    public static function primaryKey(): string
-    {
-        return 'id';
-    }
-
     public static function isGuest(string $model): bool
     {
         return !Application::$app->$model;

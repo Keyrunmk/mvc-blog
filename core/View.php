@@ -16,7 +16,7 @@ class View
         return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
-    public function renderOnlyView(string $view, array $params): string
+    public function renderOnlyView(string $view, array $params): string|bool
     {
         foreach ($params as $key => $value) {
             $$key = $value;
@@ -30,7 +30,7 @@ class View
     /**
      * Load layout file to output buffer
      */
-    public function layoutContent(): string
+    public function layoutContent(): string|bool
     {
         $layout = Application::$app->layout;
         if (Application::$app->controller) {

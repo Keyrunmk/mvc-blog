@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\controllers\admin;
+namespace App\core\controllers\admin;
 
 use App\core\Application;
 use App\core\Controller;

@@ -2,28 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\controllers\user;
+namespace App\core\controllers\user;
 
 use App\core\Controller;
-use App\core\db\DBModel;
 use App\core\exception\ValidationException;
 use App\core\LoginHelper;
-use App\core\middlewares\UserAuthenticationMiddleware;
 use App\core\Request;
 use App\core\Response;
-use App\core\traits\ValidationTrait;
 use App\models\User;
 
 class UserLoginController extends Controller
 {
-    use ValidationTrait;
-
-    protected DBModel $model;
+    //store model in $model variable for validation purpose
+    protected User $model;
 
     public function __construct()
     {
-        $this->registerMiddleware(new UserAuthenticationMiddleware("user", ["profile"]));
         $this->model = new User();
+        $this->layout = "layouts/auth";
     }
 
     public function login(Request $request, Response $response): string
@@ -34,15 +30,13 @@ class UserLoginController extends Controller
                 "email" => ["required", "email",],
                 "password" => ["required", ["min" => 8]],
             ]);
-            if ($validate && LoginHelper::login($this->model, "user")) {
-                var_dump($this->errors);
-                $response->redirect("/");
+            $login = LoginHelper::login($this->model, "user");
+            if ($validate && $login) {
+                return $response->redirect("/");
             }
             throw new ValidationException($this->errors);
         }
-        return $this->render("login", [
-            "model" => $this->model,
-        ]);
+        return $this->render("login");
     }
 
     public function register(Request $request, Response $response): mixed
@@ -52,34 +46,30 @@ class UserLoginController extends Controller
             $this->model->loadData($request->getBody());
 
             //send the reqeusts for validation and if the the request is registered return success
-            if ($this->validate([
+            $validate = $this->validate([
                 "firstname" => ["required"],
                 "lastname" => ["required"],
                 "email" => ["required", "email"],
                 "password" => ["required", ["min" => 8]],
-            ])) {
+            ]);
+
+            if ($validate) {
                 // $this->hashPassword();
-                if ($this->model->save($request->getBody())) {
-                    $response->message("Thank you for registering");
-                    $response->redirect("/");
+                $save = $this->model->save($request->getBody());
+
+                if ($save) {
+                    return $response->redirect("/");
                 }
             }
-            var_dump($this->errors);
+            throw new ValidationException($this->errors);
         }
 
-        return $this->render("register", [
-            "model" => $this->model,
-        ]);
+        return $this->render("register");
     }
 
     public function logout(Request $request, Response $response): void
     {
         LoginHelper::logout("user");
         $response->redirect("/");
-    }
-
-    public function profile(): string
-    {
-        return $this->render("profile");
     }
 }

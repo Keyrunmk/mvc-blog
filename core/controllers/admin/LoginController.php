@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\controllers\admin;
+namespace App\core\controllers\admin;
 
 use App\core\Controller;
 use App\core\LoginHelper;
@@ -20,6 +20,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->model = new Admin();
+        $this->layout = "admin/app";
     }
 
     public function showLoginForm(): void

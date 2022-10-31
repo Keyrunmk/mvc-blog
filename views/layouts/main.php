@@ -62,9 +62,9 @@ use App\core\LoginHelper;
 
   <div class="container">
     <?php
-      if (Application::$app->response->message) : ?>
+      if (isset($message)) : ?>
       <div class="alert alert-success">
-        <?php echo Application::$app->response->message; ?>
+        <?php echo $message; ?>
       </div>
     <?php endif; ?>
     {{content}}
