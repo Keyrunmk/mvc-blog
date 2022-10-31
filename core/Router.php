@@ -102,7 +102,7 @@ class Router
         return call_user_func($callback, $this->request, $this->response);
     }
 
-    protected function checkForMiddleware(array $data): array
+    protected function checkForMiddleware(array|bool $data): mixed
     {
         if (isset($data["middleware"][0])) {
             $middlewares = $data["middleware"][0];

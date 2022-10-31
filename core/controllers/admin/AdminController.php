@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->layout = "admin/app";
-        // $this->registerMiddleware(new RoleMiddleware(Application::$app->admin, ["page-admin"]));
+        $this->registerMiddleware(new RoleMiddleware(Application::$app->admin, ["page-admin"]));
     }
 
     public function dashboard(): void

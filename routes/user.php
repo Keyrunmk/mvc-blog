@@ -32,6 +32,3 @@ $app->router->post("/register", [UserLoginController::class, "register"]);
 
 //logout
 $app->router->get("/logout", [UserLoginController::class, "logout"]);
-
-//profile routes
-$app->router->get("/profile", [UserLoginController::class, "profile"]);
