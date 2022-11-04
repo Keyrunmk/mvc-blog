@@ -3,9 +3,9 @@
 namespace App\core\repositories;
 
 use App\core\contracts\CategoryContract;
-use App\core\exception\CommonException;
 use App\models\Category;
 use Exception;
+use Throwable;
 
 class CategoryRepository extends BaseRepository implements CategoryContract
 {
@@ -19,9 +19,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->all($columns, $order, $sort);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -29,9 +28,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->findOneOrFail($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -40,9 +38,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
         try {
             $this->save($params);
             return true;
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -50,9 +47,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->update($params, $id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -61,9 +57,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
         try {
             $category = $this->findCategoryById($id);
             return $this->delete($category["id"]);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 }

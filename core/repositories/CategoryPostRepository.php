@@ -3,15 +3,15 @@
 namespace App\core\repositories;
 
 use App\core\contracts\CategoryPostContract;
-use App\core\exception\CommonException;
 use App\models\CategoryPost;
 use Exception;
+use Throwable;
 
 class CategoryPostRepository extends BaseRepository implements CategoryPostContract
 {
     protected CategoryPost $model;
 
-    public function __construct(CategoryPost $model)
+    public function __construct()
     {
         $this->model = new CategoryPost();
     }
@@ -20,9 +20,8 @@ class CategoryPostRepository extends BaseRepository implements CategoryPostContr
     {
         try {
             return $this->findOneOrFail($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -30,9 +29,8 @@ class CategoryPostRepository extends BaseRepository implements CategoryPostContr
     {
         try {
             return $this->save($data);;
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -40,9 +38,8 @@ class CategoryPostRepository extends BaseRepository implements CategoryPostContr
     {
         try {
             return $this->update($data, $id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -51,9 +48,8 @@ class CategoryPostRepository extends BaseRepository implements CategoryPostContr
         try {
             $category = $this->findCategoryPostById($id);
             return $this->delete($category->id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 }

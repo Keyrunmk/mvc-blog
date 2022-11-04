@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\core\db;
 
 use App\core\Application;
-use App\core\exception\CommonException;
 use App\core\Model;
+use Exception;
 use PDO;
+use Throwable;
 
 abstract class DBModel extends Model
 {
@@ -36,8 +37,8 @@ abstract class DBModel extends Model
             }
             $statement->execute();
             return (int) Application::$app->db->pdo->lastInsertId();
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -49,8 +50,8 @@ abstract class DBModel extends Model
             $statement = self::prepare("UPDATE $this->tableName SET " . implode(', ', $sql) . " WHERE id = $id");
             $statement->execute();
             return true;
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -60,8 +61,8 @@ abstract class DBModel extends Model
             $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -80,8 +81,8 @@ abstract class DBModel extends Model
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -99,8 +100,8 @@ abstract class DBModel extends Model
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -120,8 +121,8 @@ abstract class DBModel extends Model
             $statement = self::prepare("SELECT * FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -131,8 +132,8 @@ abstract class DBModel extends Model
             $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return true;
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -142,8 +143,8 @@ abstract class DBModel extends Model
             $statement = self::prepare("DELETE FROM $this->tableName");
             $statement->execute();
             return true;
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -162,8 +163,8 @@ abstract class DBModel extends Model
 
             $statement->execute();
             return $statement->fetchObject(static::class);
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }
@@ -183,8 +184,8 @@ abstract class DBModel extends Model
 
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
-        } catch (CommonException $e) {
-            throw ($e->dump());
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }

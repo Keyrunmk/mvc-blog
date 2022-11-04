@@ -3,7 +3,8 @@
 namespace App\core\repositories;
 
 use App\core\contracts\BaseContract;
-use App\core\exception\CommonException;
+use Exception;
+use Throwable;
 
 abstract class BaseRepository implements BaseContract
 {
@@ -11,8 +12,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->save($data);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -20,8 +21,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->update($data, $id);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -29,8 +30,10 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->get($columns, $orderBy, $sortBy);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
+            // Response::setStatusCode((int) $e->getCode());
+            // var_dump($e->getMessage());
         }
     }
 
@@ -38,8 +41,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->findOne($id);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -47,8 +50,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->findOrFail($id);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -56,8 +59,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->all($data);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -65,8 +68,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->deleteById($id);
-        } catch (CommonException $e) {
-            throw $e->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 }

@@ -6,7 +6,6 @@ namespace App\core\controllers\admin;
 
 use App\core\Application;
 use App\core\Controller;
-use App\core\middlewares\AdminAuthenticationMiddleware;
 use App\core\middlewares\RoleMiddleware;
 
 class AdminController extends Controller

@@ -13,6 +13,8 @@ use App\core\repositories\PostRepository;
 use App\core\Request;
 use App\core\Response;
 use App\models\Category;
+use Exception;
+use Throwable;
 
 class CategoryController extends Controller
 {
@@ -82,11 +84,11 @@ class CategoryController extends Controller
 
             $this->categoryRepository->deleteCategory($id);
             $app->commit();
-        } catch (CommonException $e) {
+        } catch (Exception | Throwable $e) {
             if ($app->inTransaction()) {
                 $app->rollBack();
             }
-            return $e->dump();
+            throw $e;
         }
 
         return $this->index();
