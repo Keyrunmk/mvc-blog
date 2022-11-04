@@ -1,10 +1,12 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
+
+namespace App\core;
 
 abstract class Model
 {
-    abstract static public function primaryKey(): string;
+    abstract public static function primaryKey(): string;
 
     /**
      * Check if the given key matches the properties in child class
@@ -15,7 +17,7 @@ abstract class Model
             if (!property_exists($this, $key)) {
                 return false;
             }
-            if (! $this->$key = $value){
+            if (!$this->$key = $value) {
                 return false;
             };
         }

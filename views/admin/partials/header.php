@@ -1,5 +1,5 @@
 <header class="app-header" style="height: 55px;">
-    <a class="app-header__logo" href="#">MVC Blog</a>
+    <a class="app-header__logo" href="/admin">MVC Blog</a>
     <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
     <ul class="app-nav" style="height: 55px;">
         <li class="app-search">

@@ -1,18 +1,19 @@
 <?php
 
-use app\core\Application;
+use App\core\Application;
 
-class m0004_create_tests_table
+class m0009_create_posts_table
 {
     public function up()
     {
         $db = Application::$app->db;
-        
-        $sql = "CREATE TABLE tests (
+
+        $sql = "CREATE TABLE posts(
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            status VARCHAR(255) NOT NULL
         )";
+
         $db->pdo->exec($sql);
     }
 
@@ -20,7 +21,8 @@ class m0004_create_tests_table
     {
         $db = Application::$app->db;
 
-        $sql ="DROP TABLE tests";
+        $sql = "DROP TABLE posts";
+
         $db->pdo->exec($sql);
     }
 }

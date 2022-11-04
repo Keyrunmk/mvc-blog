@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace app\core\db;
+namespace App\core\db;
 
-class Database
+use App\core\singletons\Singleton;
+use PDOStatement;
+
+class Database extends Singleton
 {
     public \PDO $pdo;
 
@@ -17,9 +20,7 @@ class Database
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
-    
-
-    public function prepare(string $sql): object
+    public function prepare(string $sql): PDOStatement|false
     {
         return $this->pdo->prepare($sql);
     }

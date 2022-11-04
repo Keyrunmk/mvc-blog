@@ -1,10 +1,10 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\PostContract;
-use app\core\exception\CommonException;
-use app\models\Post;
+use App\core\contracts\PostContract;
+use App\core\exception\CommonException;
+use App\models\Post;
 use Exception;
 
 class PostRepository extends BaseRepository implements PostContract
@@ -21,7 +21,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->all($columns, $order, $sort);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -29,24 +29,21 @@ class PostRepository extends BaseRepository implements PostContract
     {
         try {
             $result = $this->findOneOrFail($id);
-            if (!$result) {
-                throw new Exception();
-            }
             return $result;
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
     public function findPostsByCategory(int $id)
     {
         try {
-            $result =  $this->model->findPostsByCategoryId($id);
+            $result =  $this->model->findManyToManyById("post", "category", "categories_posts",$id);
             return $result;
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -56,7 +53,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->save($data);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -66,7 +63,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->update($data, $id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
 
@@ -76,7 +73,7 @@ class PostRepository extends BaseRepository implements PostContract
             return $this->delete($id);
         } catch (Exception $e) {
             $exception = new CommonException($e);
-            throw $exception->dump();
+            throw $exception;
         }
     }
-}   
+}
