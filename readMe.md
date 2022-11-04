@@ -35,8 +35,6 @@ Features of this mvc framework are as follows;
 
 - Register/Login
 
-- TODO - Active Record Pattern
-
 - Session
 
 - Middlewares

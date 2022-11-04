@@ -26,7 +26,7 @@ abstract class DBModel extends Model
         $this->attributes = $this->attributes();
     }
 
-    public function save(array $data): int|CommonException
+    public function save(array $data): int
     {
         try {
             $params = array_map(fn ($attr) => ":$attr", $this->attributes);
@@ -37,11 +37,11 @@ abstract class DBModel extends Model
             $statement->execute();
             return (int) Application::$app->db->pdo->lastInsertId();
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
-    public function update(array $data, int $id): bool|CommonException
+    public function update(array $data, int $id): bool
     {
         try {
             $attributes = array_keys($data);
@@ -50,22 +50,22 @@ abstract class DBModel extends Model
             $statement->execute();
             return true;
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
-    public function get(array $columns = array('*'), string $orderBy = 'id', string $sortBy = 'desc'): array|CommonException
+    public function get(array $columns = array('*'), string $orderBy = 'id', string $sortBy = 'desc'): array
     {
         try {
             $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
-    public function findManyToManyById(string $firstTable, string $secondTable, string $linkTable, int $id, string $column = "*"): array|CommonException
+    public function findManyToManyById(string $firstTable, string $secondTable, string $linkTable, int $id, string $column = "*"): array
     {
         try {
             $firstTable_id = $firstTable . "_id";
@@ -81,11 +81,11 @@ abstract class DBModel extends Model
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
-    public function findManyToMany(string $firstTable, string $secondTable, string $linkTable, string $column = "*"): array|CommonException
+    public function findManyToMany(string $firstTable, string $secondTable, string $linkTable, string $column = "*"): array
     {
         try {
             $firstTable_id = $firstTable . "_id";
@@ -100,7 +100,7 @@ abstract class DBModel extends Model
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
@@ -114,25 +114,25 @@ abstract class DBModel extends Model
         return trim($tableName . "s");
     }
 
-    public function findOrFail(int $id): array|CommonException
+    public function findOrFail(int $id): mixed
     {
         try {
             $statement = self::prepare("SELECT * FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
-    public function deleteById(int $id): bool|CommonException
+    public function deleteById(int $id): bool
     {
         try {
             $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
             $statement->execute();
             return true;
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
@@ -143,7 +143,7 @@ abstract class DBModel extends Model
             $statement->execute();
             return true;
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
     }
 
@@ -163,12 +163,12 @@ abstract class DBModel extends Model
             $statement->execute();
             return $statement->fetchObject(static::class);
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }
 
-    public static function findAll(array $where): array|CommonException // [email => test@example.com, firstname => test]
+    public static function findAll(array $where): array // [email => test@example.com, firstname => test]
     {
         try {
             $class = new (static::class);
@@ -184,7 +184,7 @@ abstract class DBModel extends Model
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (CommonException $e) {
-            throw ($e);
+            throw ($e->dump());
         }
         // here static corresponds to the class on which the findOne will be called, user is this case, it's user's tableName
     }

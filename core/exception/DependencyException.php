@@ -6,6 +6,6 @@ namespace App\core\exception;
 
 use Exception;
 
-class ContainerException extends Exception
+class DependencyException extends Exception
 {
 }

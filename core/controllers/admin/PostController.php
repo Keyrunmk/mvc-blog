@@ -11,6 +11,7 @@ use App\core\repositories\CategoryPostRepository;
 use App\core\repositories\CategoryRepository;
 use App\core\repositories\PostRepository;
 use App\core\Request;
+use App\core\Response;
 use App\core\traits\ValidationTrait;
 use App\models\Post;
 
@@ -71,7 +72,7 @@ class PostController extends Controller
         }
 
         // Application::$app->session->setFlash("Success", "Product Added");
-        Application::$app->response->redirect("/admin/posts");
+        Response::redirect("/admin/posts");
     }
 
     public function update(Request $request): string
@@ -79,8 +80,10 @@ class PostController extends Controller
         $data = $request->getBody();
         $id = (int) array_pop($data);
 
-        $this->postRepository->updatePost($data, $id);
-        return $this->index();
+        if ($request->method() === "post"){
+            $this->postRepository->updatePost($data, $id);
+            return Response::redirect("/admin/posts");
+        }
 
         $post = $this->postRepository->findPostById($id);
         return $this->render("admin/post/update", ["post" => $post]);

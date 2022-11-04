@@ -18,11 +18,6 @@ class LoginHelper
         return !Application::$app->$model;
     }
 
-    public static function isAdminGuest(): bool
-    {
-        return !Application::$app->admin;
-    }
-
     public static function logout($model)
     {
         $app = Application::$app;

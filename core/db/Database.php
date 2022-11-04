@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\core\db;
 
+use App\core\singletons\Singleton;
 use PDOStatement;
 
-class Database
+class Database extends Singleton
 {
     public \PDO $pdo;
 

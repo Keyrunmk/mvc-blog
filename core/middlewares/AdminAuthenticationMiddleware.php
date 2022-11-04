@@ -4,6 +4,7 @@ namespace App\core\middlewares;
 
 use App\core\Application;
 use App\core\LoginHelper;
+use App\core\Response;
 use App\models\Admin;
 
 class AdminAuthenticationMiddleware extends BaseMiddleware
@@ -17,15 +18,10 @@ class AdminAuthenticationMiddleware extends BaseMiddleware
 
     public function execute()
     {
-        if (LoginHelper::isAdminGuest("admin")) {
+        if (LoginHelper::isGuest("admin")) {
             if (empty($this->actions) || in_array(Application::$app->controller->action, $this->actions)) {
-                return $this->route()->redirect('/admin/login');
+                return Response::redirect('/admin/login');
             }
         }
-    }
-
-    public function route()
-    {
-        return Application::$app->response;
     }
 }

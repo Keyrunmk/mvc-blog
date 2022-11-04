@@ -6,8 +6,6 @@ namespace App\core;
 
 use App\core\db\Database;
 use App\core\db\DBMigrations;
-use App\core\Request;
-use App\core\singletons\Container;
 
 class Application
 {
@@ -21,14 +19,10 @@ class Application
     public string $adminClass;
 
     //class props
-    public Router $router;
-    public Request $request;
-    public Response $response;
     public Database $db;
     public DBMigrations $dbMigration;
     public Session $session;
     public View $view;
-    public Container $container;
 
     //nullable props
     public ?Model $model = null;
@@ -38,15 +32,12 @@ class Application
     {
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
-        $this->container = Container::getInstance();
-        $this->request = new Request();
-        $this->response = new Response();
         $this->session = new Session();
-        $this->router = new Router($this->request, $this->response, $this->container);
         $this->view = new View();
 
-        $this->db = new Database($config["db"]);
-        $this->dbMigration = new DBMigrations($config["db"]);
+        // $this->db = new Database($config["db"]);
+        $this->db = Database::getInstance($config["db"]);
+        $this->dbMigration = new DBMigrations($this->db);
 
         if (isset($config["class"])) {
             $this->setClass($config["class"]);
@@ -55,7 +46,7 @@ class Application
         }
     }
 
-    private function setClass(Array $class): void
+    private function setClass(array $class): void
     {
         foreach ($class as $key => $value) {
             $this->$key = $value;
@@ -87,18 +78,5 @@ class Application
     public function setController(Controller $controller): void
     {
         $this->controller = $controller;
-    }
-
-    //this runs after all requests are done
-    public function run()
-    {
-        try {
-            echo $this->router->resolve();
-        } catch (\Exception $e) {
-            $this->response->setStatusCode((int) $e->getCode());
-            echo $this->view->renderView("_error", [
-                "exception" => $e
-            ]);
-        }
     }
 }

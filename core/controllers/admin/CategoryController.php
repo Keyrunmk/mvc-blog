@@ -65,6 +65,7 @@ class CategoryController extends Controller
         }
 
         $category = $this->categoryRepository->findCategoryById($id);
+
         return $this->render("admin/categories/update", ["category" => $category]);
     }
 

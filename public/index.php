@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use App\core\Application;
+use App\core\AppResolver;
 
 $envPath = "../.env";
 require "../LoadEnv.php";
@@ -15,7 +16,7 @@ $config = [
         "userClass" => \App\models\User::class,
         "adminClass" => \App\models\Admin::class,
     ],
-    // Database Credentials
+    // Database credentials
     "db" => [
         "dsn" => $data["DB_DSN"],
         "user" => $data["DB_USER"],
@@ -23,7 +24,7 @@ $config = [
     ]
 ];
 
-//set Application dependencies
+// Set Application dependencies
 include_once "../core/AppServiceProvider.php";
 
 /**
@@ -38,4 +39,6 @@ include_once "../routes/user.php";
 include_once "../routes/admin.php";
 
 //runs the resolve method from Router.php after all requests are done
-$app->run();
+$appResolver = new AppResolver();
+
+$appResolver->run();

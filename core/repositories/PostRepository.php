@@ -29,9 +29,6 @@ class PostRepository extends BaseRepository implements PostContract
     {
         try {
             $result = $this->findOneOrFail($id);
-            if (!$result) {
-                throw new Exception();
-            }
             return $result;
         } catch (Exception $e) {
             $exception = new CommonException($e);

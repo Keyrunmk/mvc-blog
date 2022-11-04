@@ -9,6 +9,14 @@ use Exception;
 
 class DBMigrations extends Database
 {
+    protected Database $db;
+
+    public function __construct(Database $db)
+    {
+        $this->db = $db;
+
+    }
+
     public function rollback(): void
     {
         $appliedMigrations = $this->getAppliedMigrations();
@@ -80,7 +88,7 @@ class DBMigrations extends Database
 
     public function createMigrationsTable(): void
     {
-        $this->pdo->exec("
+        $this->db->pdo->exec("
             CREATE TABLE IF NOT EXISTS migrations (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 migration VARCHAR(255),
@@ -91,12 +99,12 @@ class DBMigrations extends Database
 
     public function dropMigrationsTable(): void
     {
-        $this->pdo->exec("DROP TABLE IF EXISTS migrations");
+        $this->db->pdo->exec("DROP TABLE IF EXISTS migrations");
     }
 
     public function getAppliedMigrations(): array
     {
-        $statement = $this->pdo->prepare("SELECT migration FROM migrations");
+        $statement = $this->db->pdo->prepare("SELECT migration FROM migrations");
         $statement->execute();
 
         return $statement->fetchAll(\PDO::FETCH_COLUMN);
@@ -105,7 +113,7 @@ class DBMigrations extends Database
     public function saveMigrations(array $migrations): void
     {
         $str = implode(",", array_map(fn ($m) => "('$m')", $migrations));
-        $statement = $this->pdo->prepare("INSERT INTO migrations (migration) VALUES
+        $statement = $this->db->pdo->prepare("INSERT INTO migrations (migration) VALUES
         $str
         ");
         $statement->execute();
