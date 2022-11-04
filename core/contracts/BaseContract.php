@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core\contracts;
+namespace App\core\contracts;
 
 interface BaseContract
 {

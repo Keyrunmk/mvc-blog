@@ -1,29 +1,27 @@
 <?php
 
-namespace app\core\middlewares;
+namespace App\core\middlewares;
 
-use app\core\Application;
-use app\core\LoginHelper;
+use App\core\Application;
+use App\core\LoginHelper;
+use App\core\Response;
+use App\models\Admin;
 
 class AdminAuthenticationMiddleware extends BaseMiddleware
 {
-    public function __construct(string $model, array|string|null $actions = [])
+    public Admin $admin;
+
+    public function __construct(Admin $admin)
     {
-        $this->model = $model;
-        $this->actions = $actions;
+        $this->admin = $admin;
     }
 
     public function execute()
     {
-        if (LoginHelper::isAdminGuest($this->model)) {
+        if (LoginHelper::isGuest("admin")) {
             if (empty($this->actions) || in_array(Application::$app->controller->action, $this->actions)) {
-                return $this->route()->redirect('/admin/login');
+                return Response::redirect('/admin/login');
             }
         }
-    }
-
-    public function route()
-    {
-        return Application::$app->response;
     }
 }

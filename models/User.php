@@ -1,19 +1,16 @@
 <?php
 
-namespace app\models;
+declare(strict_types=1);
 
-use app\core\db\DBModel;
+namespace App\models;
+
+use App\core\db\DBModel;
 
 class User extends DBModel
 {
-    const STATUS_INACTIVE = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_DELETED = 2;
-
     public string $firstname = '';
     public string $lastname = '';
     public string $email = '';
-    public int $status = self::STATUS_INACTIVE;
     public string $password = '';
     public string $confirmPassword = '';
 
@@ -35,7 +32,7 @@ class User extends DBModel
 
     public function attributes(): array
     {
-        return ['firstname', 'lastname', 'email', 'password', 'status'];
+        return ['firstname', 'lastname', 'email', 'password'];
     }
 
     public function getDisplayName(): string

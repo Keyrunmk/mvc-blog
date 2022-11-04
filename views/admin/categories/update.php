@@ -21,14 +21,14 @@ $this->title = "Create category";
                 <div class="tile-body">
                     <div class="form-group">
                         <label class="control-label" for="name">Name <span class="m-l-5 text-danger"></span></label>
-                        <input class="form-control" type="text" name="name" id="name" value="<?php echo $category->name ?>" />
+                        <input class="form-control" type="text" name="name" id="name" value="<?php echo $category['name'] ?>" />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="description">Description</label>
                         <textarea class="form-control" rows="4" name="description" id="description"></textarea>
                     </div>
                 </div>
-                <input type="hidden" name="id" value="<?php echo $category->id ?>">
+                <input type="hidden" name="id" value="<?php echo $category['id'] ?>">
                 <div class=" tile-footer">
                     <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save Category</button>
                     &nbsp;&nbsp;&nbsp;
