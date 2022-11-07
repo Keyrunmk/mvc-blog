@@ -1,17 +1,16 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\CategoryContract;
-use app\core\db\DBModel;
-use app\core\exception\CommonException;
-use app\models\Category;
+use App\core\contracts\CategoryContract;
+use App\models\Category;
 use Exception;
+use Throwable;
 
 class CategoryRepository extends BaseRepository implements CategoryContract
 {
     protected Category $model;
-    public function __construct(Category $model)
+    public function __construct()
     {
         $this->model = new Category();
     }
@@ -20,9 +19,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->all($columns, $order, $sort);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -30,9 +28,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->findOneOrFail($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -41,9 +38,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
         try {
             $this->save($params);
             return true;
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -51,9 +47,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
     {
         try {
             return $this->update($params, $id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -62,9 +57,8 @@ class CategoryRepository extends BaseRepository implements CategoryContract
         try {
             $category = $this->findCategoryById($id);
             return $this->delete($category["id"]);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 }

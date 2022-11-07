@@ -1,5 +1,5 @@
 <header class="app-header" style="height: 55px;">
-    <a class="app-header__logo" href="#">MVC Blog</a>
+    <a class="app-header__logo" href="/admin">MVC Blog</a>
     <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
     <ul class="app-nav" style="height: 55px;">
         <li class="app-search">
@@ -61,7 +61,7 @@
                     <a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="page-user.html"><i class="fa fa-user fa-lg"></i> Profile</a>
+                    <a class="dropdown-item" href="/admin/users/create"><i class="fa fa-user fa-lg"></i> Add Users</a>
                 </li>
                 <li>
                     <a class="dropdown-item" href="/admin/logout"><i class="fa fa-sign-out fa-lg"></i> Logout</a>

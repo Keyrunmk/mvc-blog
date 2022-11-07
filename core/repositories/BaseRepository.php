@@ -1,21 +1,29 @@
 <?php
 
-namespace app\core\repositories;
+namespace App\core\repositories;
 
-use app\core\contracts\BaseContract;
-use app\core\db\DBModel;
-use app\core\exception\CommonException;
+use App\core\contracts\BaseContract;
+use ErrorException;
 use Exception;
+use Throwable;
 
-class BaseRepository implements BaseContract
+abstract class BaseRepository implements BaseContract
 {
     public function save(array $data): mixed
     {
         try {
             return $this->model->save($data);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function saveByTableName(array $data, string $tablename): mixed
+    {
+        try {
+            return $this->model->saveByTable($data, $tablename);
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -23,9 +31,8 @@ class BaseRepository implements BaseContract
     {
         try {
             return $this->model->update($data, $id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -33,9 +40,8 @@ class BaseRepository implements BaseContract
     {
         try {
             return $this->model->get($columns, $orderBy, $sortBy);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable | ErrorException $e) {
+            throw $e;
         }
     }
 
@@ -43,9 +49,8 @@ class BaseRepository implements BaseContract
     {
         try {
             return $this->model->findOne($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -53,9 +58,8 @@ class BaseRepository implements BaseContract
     {
         try {
             return $this->model->findOrFail($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
@@ -63,19 +67,17 @@ class BaseRepository implements BaseContract
     {
         try {
             return $this->model->all($data);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 
     public function delete(int $id): mixed
     {
         try {
-            return $this->model->delete($id);
-        } catch (Exception $e) {
-            $exception = new CommonException($e);
-            throw $exception->dump();
+            return $this->model->deleteById($id);
+        } catch (Exception | Throwable $e) {
+            throw $e;
         }
     }
 }

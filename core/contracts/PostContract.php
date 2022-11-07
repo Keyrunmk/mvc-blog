@@ -1,8 +1,6 @@
 <?php
 
-namespace app\core\contracts;
-
-use app\models\Post;
+namespace App\core\contracts;
 
 interface PostContract
 {

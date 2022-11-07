@@ -2,47 +2,42 @@
 
 declare(strict_types=1);
 
-namespace app\core;
+namespace App\core;
 
-use app\core\db\Database;
-use app\core\db\DBMigrations;
-use app\core\Request;
-use app\core\singletons\Container;
+use App\core\db\Database;
+use App\core\db\DBMigrations;
 
 class Application
 {
+    //static props
     public static string $ROOT_DIR;
-
     public static Application $app;
+
+    //props
     public string $layout = "layouts/main";
     public string $userClass;
     public string $adminClass;
 
-    public Router $router;
-    public Request $request;
-    public Response $response;
+    //class props
     public Database $db;
     public DBMigrations $dbMigration;
     public Session $session;
     public View $view;
-    public Container $container;
 
-    public ?Model $model;
+    //nullable props
+    public ?Model $model = null;
     public ?Controller $controller = null;
 
     public function __construct($rootPath, array $config)
     {
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
-        $this->container = Container::getInstance();
-        $this->request = new Request();
-        $this->response = new Response();
         $this->session = new Session();
-        $this->router = new Router($this->request, $this->response, $this->container);
         $this->view = new View();
 
-        $this->db = new Database($config["db"]);
-        $this->dbMigration = new DBMigrations($config["db"]);
+        // $this->db = new Database($config["db"]);
+        $this->db = Database::getInstance($config["db"]);
+        $this->dbMigration = new DBMigrations($this->db);
 
         if (isset($config["class"])) {
             $this->setClass($config["class"]);
@@ -51,7 +46,7 @@ class Application
         }
     }
 
-    private function setClass(Array $class): void
+    private function setClass(array $class): void
     {
         foreach ($class as $key => $value) {
             $this->$key = $value;
@@ -70,7 +65,7 @@ class Application
     }
 
     /**
-     * @return \app\core\Controller $controller
+     * @return \App\core\Controller $controller
      */
     public function getController(Controller $controller): void
     {
@@ -78,23 +73,10 @@ class Application
     }
 
     /**
-     * @return \app\core\controller $controller
+     * @return \App\core\controller $controller
      */
     public function setController(Controller $controller): void
     {
         $this->controller = $controller;
-    }
-
-    //this runs after all requests are done
-    public function run()
-    {
-        try {
-            echo $this->router->resolve();
-        } catch (\Exception $e) {
-            $this->response->setStatusCode((int) $e->getCode());
-            echo $this->view->renderView("_error", [
-                "exception" => $e
-            ]);
-        }
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-namespace app\core;
+declare(strict_types=1);
+
+namespace App\core;
 
 class Session
 {
@@ -9,17 +11,17 @@ class Session
         session_start();
     }
 
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         $_SESSION[$key] = $value;
     }
 
-    public function get($key)
+    public function get($key): mixed
     {
         return $_SESSION[$key] ?? false;
     }
 
-    public function remove($key)
+    public function remove($key): void
     {
         unset($_SESSION[$key]);
     }

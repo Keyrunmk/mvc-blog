@@ -21,14 +21,14 @@ $this->title = "Update post";
                 <div class="tile-body">
                     <div class="form-group">
                         <label class="control-label" for="name">Name <span class="m-l-5 text-danger"></span></label>
-                        <input class="form-control" type="text" name="name" id="name" value="<?php echo $post->name ?>" />
+                        <input class="form-control" type="text" name="name" id="name" value="<?php echo $post['name'] ?>" />
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="status">Status</label>
                         <textarea class="form-control" rows="4" name="status" id="status"></textarea>
                     </div>
                 </div>
-                <input type="hidden" name="id" value="<?php echo $post->id ?>">
+                <input type="hidden" name="id" value="<?php echo $post['id'] ?>">
                 <div class="tile-footer">
                     <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Update Post</button>
                     &nbsp;&nbsp;&nbsp;

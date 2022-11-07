@@ -8,7 +8,7 @@
     </div>
     <ul class="app-menu">
         <li>
-            <a class="app-menu__item" href="/admin">
+            <a class="app-menu__item" href="/admin/dashboard">
                 <span class="app-menu__label">Dashboard</span>
             </a>
         </li>
@@ -26,7 +26,7 @@
         </li>
 
         <li>
-            <a class="app-menu__item" href="#">
+            <a class="app-menu__item" href="/admin/settings">
                 <span class="app-menu__label">Settings</span>
             </a>
         </li>

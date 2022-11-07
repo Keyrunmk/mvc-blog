@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use app\core\Application;
+use App\core\Application;
+use App\core\AppResolver;
 
 $envPath = "../.env";
 require "../LoadEnv.php";
 
 $config = [
+    // Define classes for authentication
     "class" => [
-        "userClass" => \app\models\User::class,
-        "adminClass" => \app\models\Admin::class,
+        "userClass" => \App\models\User::class,
+        "adminClass" => \App\models\Admin::class,
     ],
+    // Database credentials
     "db" => [
         "dsn" => $data["DB_DSN"],
         "user" => $data["DB_USER"],
@@ -21,17 +24,21 @@ $config = [
     ]
 ];
 
-//set application dependencies
-include_once "../core/appServiceContainer.php";
+// Set Application dependencies
+include_once "../core/AppServiceProvider.php";
 
 /**
- * Create new application instance
+ * Create new Application instance
  */
 $app = new Application(dirname(__DIR__), $config);
 
+// User routes
 include_once "../routes/user.php";
 
+// Admin routes
 include_once "../routes/admin.php";
 
 //runs the resolve method from Router.php after all requests are done
-$app->run();
+$appResolver = new AppResolver();
+
+$appResolver->run();
