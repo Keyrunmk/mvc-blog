@@ -61,7 +61,7 @@
                     <a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="page-user.html"><i class="fa fa-user fa-lg"></i> Profile</a>
+                    <a class="dropdown-item" href="/admin/users/create"><i class="fa fa-user fa-lg"></i> Add Users</a>
                 </li>
                 <li>
                     <a class="dropdown-item" href="/admin/logout"><i class="fa fa-sign-out fa-lg"></i> Logout</a>

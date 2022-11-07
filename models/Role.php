@@ -11,7 +11,7 @@ class Role extends DBModel
 
     public function tableName(): string
     {
-        return "tables";
+        return "roles";
     }
 
     public function attributes(): array

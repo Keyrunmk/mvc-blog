@@ -3,6 +3,7 @@
 namespace App\core\repositories;
 
 use App\core\contracts\BaseContract;
+use ErrorException;
 use Exception;
 use Throwable;
 
@@ -12,6 +13,15 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->save($data);
+        } catch (Exception | Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function saveByTableName(array $data, string $tablename): mixed
+    {
+        try {
+            return $this->model->saveByTable($data, $tablename);
         } catch (Exception | Throwable $e) {
             throw $e;
         }
@@ -30,10 +40,8 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             return $this->model->get($columns, $orderBy, $sortBy);
-        } catch (Exception | Throwable $e) {
+        } catch (Exception | Throwable | ErrorException $e) {
             throw $e;
-            // Response::setStatusCode((int) $e->getCode());
-            // var_dump($e->getMessage());
         }
     }
 

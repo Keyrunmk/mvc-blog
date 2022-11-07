@@ -17,7 +17,7 @@ class SiteController extends Controller
     protected PostRepository $postRepository;
     protected CategoryRepository $categoryRepository;
 
-    public function __construct(PostContract $postRepository,CategoryContract $categoryRepository)
+    public function __construct(PostContract $postRepository, CategoryContract $categoryRepository)
     {
         $this->postRepository = $postRepository;
         $this->categoryRepository = $categoryRepository;

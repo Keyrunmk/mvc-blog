@@ -2,8 +2,8 @@
 
 namespace App\core\middlewares;
 
-use App\core\exception\CommonException;
 use App\core\Model;
+use Exception;
 
 class RoleMiddleware extends BaseMiddleware
 {
@@ -18,9 +18,9 @@ class RoleMiddleware extends BaseMiddleware
     {
         if (!$this->model->hasRole($this->roles)) {
             if ($this->permissions !== null && !$this->model->hasPermission($this->permissions)) {
-                throw new CommonException("You don't have the permission");
+                throw new Exception("You don't have the permission");
             }
-            throw new CommonException("You don't have the role");
+            throw new Exception("You don't have the role");
         }
     }
 }

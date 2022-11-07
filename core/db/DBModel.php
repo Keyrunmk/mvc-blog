@@ -12,27 +12,35 @@ use Throwable;
 
 abstract class DBModel extends Model
 {
-    protected string $tableName;
-    protected array $attributes;
-
     abstract public function tableName(): string;
 
     abstract public function attributes(): array;
 
     abstract static public function primaryKey(): string;
 
-    public function __construct()
-    {
-        $this->tableName = $this->tableName();
-        $this->attributes = $this->attributes();
-    }
-
     public function save(array $data): int
     {
         try {
-            $params = array_map(fn ($attr) => ":$attr", $this->attributes);
-            $statement = self::prepare("INSERT INTO $this->tableName (" . implode(',', $this->attributes) . ") VALUES(" . implode(',', $params) . ")");
-            foreach ($this->attributes as $attribute) {
+            $attributes = array_keys($data);
+            $params = array_map(fn ($attr) => ":$attr", $attributes);
+            $statement = self::prepare("INSERT INTO ".$this->tableName()." (" . implode(',', $attributes) . ") VALUES(" . implode(',', $params) . ")");
+            foreach ($attributes as $attribute) {
+                $statement->bindValue(":$attribute", $data[$attribute]);
+            }
+            $statement->execute();
+            return (int) Application::$app->db->pdo->lastInsertId();
+        } catch (Exception | Throwable $e) {
+            throw $e;
+        }
+    }
+
+    public function saveByTable(array $data, string $tablename): int
+    {
+        try {
+            $attributes = array_keys($data);
+            $params = array_map(fn ($attr) => ":$attr", $attributes);
+            $statement = self::prepare("INSERT INTO $tablename (" . implode(',', $attributes) . ") VALUES(" . implode(',', $params) . ")");
+            foreach ($attributes as $attribute) {
                 $statement->bindValue(":$attribute", $data[$attribute]);
             }
             $statement->execute();
@@ -47,7 +55,7 @@ abstract class DBModel extends Model
         try {
             $attributes = array_keys($data);
             $sql = array_map(fn ($attr, $param) => "$attr = '$param'", $attributes, $data);
-            $statement = self::prepare("UPDATE $this->tableName SET " . implode(', ', $sql) . " WHERE id = $id");
+            $statement = self::prepare("UPDATE ".$this->tableName()." SET " . implode(', ', $sql) . " WHERE id = $id");
             $statement->execute();
             return true;
         } catch (Exception | Throwable $e) {
@@ -58,7 +66,7 @@ abstract class DBModel extends Model
     public function get(array $columns = array('*'), string $orderBy = 'id', string $sortBy = 'desc'): array
     {
         try {
-            $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM $this->tableName ORDER BY $orderBy $sortBy");
+            $statement = self::prepare("SELECT " . implode(',', $columns) . " FROM ".$this->tableName()." ORDER BY $orderBy $sortBy");
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception | Throwable $e) {
@@ -118,7 +126,7 @@ abstract class DBModel extends Model
     public function findOrFail(int $id): mixed
     {
         try {
-            $statement = self::prepare("SELECT * FROM $this->tableName WHERE id = $id");
+            $statement = self::prepare("SELECT * FROM ".$this->tableName()." WHERE id = $id");
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (Exception | Throwable $e) {
@@ -129,7 +137,7 @@ abstract class DBModel extends Model
     public function deleteById(int $id): bool
     {
         try {
-            $statement = self::prepare("DELETE FROM $this->tableName WHERE id = $id");
+            $statement = self::prepare("DELETE FROM ".$this->tableName()." WHERE id = $id");
             $statement->execute();
             return true;
         } catch (Exception | Throwable $e) {
@@ -140,7 +148,7 @@ abstract class DBModel extends Model
     public function delete()
     {
         try {
-            $statement = self::prepare("DELETE FROM $this->tableName");
+            $statement = self::prepare("DELETE FROM ".$this->tableName()."");
             $statement->execute();
             return true;
         } catch (Exception | Throwable $e) {

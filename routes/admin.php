@@ -20,6 +20,11 @@ Router::group(["prefix" => "/admin"], function () {
 
 Router::group(["prefix" => "/admin", "middleware" => ["authAdmin"]], function () {
     Router::get("", [AdminController::class, "index"]);
+    Router::get("/users/create", [AdminController::class, "create"]);
+    Router::post("/users/store", [AdminController::class, "store"]);
+    Router::get("/users/update", [AdminController::class, "update"]);
+    Router::get("/users/update", [AdminController::class, "update"]);
+    Router::get("/users/delete", [AdminController::class, "delete"]);
 
     Router::get("/dashboard", [AdminController::class, "dashboard"]);
     Router::get("/settings", [AdminController::class, "settings"]);

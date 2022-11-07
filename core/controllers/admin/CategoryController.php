@@ -7,7 +7,6 @@ namespace App\core\controllers\admin;
 use App\core\Application;
 use App\core\contracts\CategoryContract;
 use App\core\Controller;
-use App\core\exception\CommonException;
 use App\core\exception\ValidationException;
 use App\core\repositories\PostRepository;
 use App\core\Request;

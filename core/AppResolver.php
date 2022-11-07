@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\core;
 
 use App\core\singletons\Dependency;
+use ErrorException;
 use Throwable;
 
 class AppResolver
@@ -26,7 +27,7 @@ class AppResolver
     {
         try {
             echo $this->routeResolver->resolve();
-        } catch (\Exception | Throwable $e) {
+        } catch (\Exception | Throwable | ErrorException $e) {
             Response::setStatusCode((int) $e->getCode());
             echo Application::$app->view->renderView("_error", [
                 "exception" => $e
